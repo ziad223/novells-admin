@@ -87,11 +87,11 @@ export default function Login() {
                             <input id="password" type="password" value={data.password || ''} onChange={(e) => setData({ ...data, password: e.target.value })} required className="form-input" autoComplete='off' />
                         </div>
 
-                        <p className="text-left my-2 rtl:text-right flex justify-end">
+                        {/* <p className="text-left my-2 rtl:text-right flex justify-end">
                             <Link href="/auth/forget-password" className="text-primary hover:underline ltr:ml-2 rtl:mr-2">
                                 Forget your password ?
                             </Link>
-                            </p>
+                            </p> */}
 
                         <div className='py-1'>
                             <label className="cursor-pointer flex">

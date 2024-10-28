@@ -558,7 +558,7 @@ export default function Header() {
                         {config.text.mail}
                       </button>
                     </li>
-                  )} */
+                  )} 
                   <li>
                     <button
                       onClick={() =>
@@ -611,7 +611,7 @@ export default function Header() {
 
                       {config.text.lockscreen}
                     </button>
-                  </li> */
+                  </li> 
                   <li className="mt-2 border-t border-white-light dark:border-white-light/10">
                     <button
                       onClick={() => dispatch(toggle_user({}))}
