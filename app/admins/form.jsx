@@ -45,7 +45,7 @@ export default function Form_Admin({ id }) {
   };
   const get_item = async () => {
     await fetch(
-      `https://sahl.future-developers.cloud/api/admin/user/show/${id}`,
+      `https://webtoon.future-developers.cloud/api/admin/user/show/${id}`,
       {
         method: "GET",
         headers: {
@@ -111,8 +111,8 @@ export default function Form_Admin({ id }) {
     }
     setLoader(true);
     const url = id
-      ? `https://sahl.future-developers.cloud/api/admin/user/update/${id}`
-      : "https://sahl.future-developers.cloud/api/admin/user/create";
+      ? `https://webtoon.future-developers.cloud/api/admin/user/update/${id}`
+      : "https://webtoon.future-developers.cloud/api/admin/user/create";
     const token = get_session("user")?.access_token;
     if (!token) {
       setLoader(false);

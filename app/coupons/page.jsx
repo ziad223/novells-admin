@@ -92,7 +92,7 @@ export default function Coupons () {
    const delete_ = async (payload) => {
   try {
     const response = await fetch(
-      `https://sahl.future-developers.cloud/api/admin/coupon/delete`,
+      `https://webtoon.future-developers.cloud/api/admin/coupon/delete`,
       {
         method: "DELETE",
         body: JSON.stringify(payload),
@@ -144,7 +144,7 @@ export default function Coupons () {
     };
     try {
       const response = await fetch(
-        `https://sahl.future-developers.cloud/api/admin/coupon/show/${id}`,
+        `https://webtoon.future-developers.cloud/api/admin/coupon/show/${id}`,
         {
           headers: headers,
           method: "GET",
@@ -218,8 +218,8 @@ const save_coupon = async () => {
 
     // تحديد الرابط بناءً على ما إذا كان يتم إنشاء كوبون جديد أو تعديل كوبون موجود
     const endpoint = formData.id 
-        ? `https://sahl.future-developers.cloud/api/admin/coupon/update/${formData.id}`
-        : 'https://sahl.future-developers.cloud/api/admin/coupon/create';
+        ? `https://webtoon.future-developers.cloud/api/admin/coupon/update/${formData.id}`
+        : 'https://webtoon.future-developers.cloud/api/admin/coupon/create';
 
     try {
         // إرسال الطلب باستخدام fetch
@@ -262,7 +262,7 @@ const save_coupon = async () => {
 };
 
  const get = async () => {
-    await fetch("https://sahl.future-developers.cloud/api/admin/coupon/all",  {
+    await fetch("https://webtoon.future-developers.cloud/api/admin/coupon/all",  {
       method: "GET",
       headers: {
         "Content-Type": "application/json", // Set the content type to JSON

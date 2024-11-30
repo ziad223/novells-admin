@@ -84,7 +84,7 @@ export default function Form_Product({ id }) {
     };
 
     await fetch(
-      `https://sahl.future-developers.cloud/api/admin/product/show/${id}`,
+      `https://webtoon.future-developers.cloud/api/admin/product/show/${id}`,
       {
         headers: headers,
         method: "GET",
@@ -204,7 +204,7 @@ export default function Form_Product({ id }) {
     };
     try {
       const response = await fetch(
-        `https://sahl.future-developers.cloud/api/admin/products/delete`,
+        `https://webtoon.future-developers.cloud/api/admin/products/delete`,
         {
           method: "DELETE",
           body: JSON.stringify(Id),
@@ -276,7 +276,7 @@ export default function Form_Product({ id }) {
         formData.append("product_id", id);
 
         // رفع الملف إلى الـ API
-        const response = await fetch("https://sahl.future-developers.cloud/api/admin/product/image/create", {
+        const response = await fetch("https://webtoon.future-developers.cloud/api/admin/product/image/create", {
           method: "POST",
           body: formData,
            headers: {

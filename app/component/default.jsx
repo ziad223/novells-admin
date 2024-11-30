@@ -1,6 +1,6 @@
 "use client";
-import { toggle_dir, toggle_theme, toggle_lang, toggle_menu, toggle_layout, toggle_animation, toggle_nav, toggle_semidark, toggle_side, toggle_user, toggle_text } from '../../public/script/store';
-import { api, date, get_session, print } from '../../public/script/public';
+import { toggle_dir, toggle_theme, toggle_lang, toggle_menu, toggle_layout, toggle_animation, toggle_nav, toggle_semidark, toggle_side, toggle_user, toggle_text } from '@/public/script/store';
+import { api, date, get_session, print } from '@/public/script/public';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { usePathname, useRouter } from 'next/navigation';
@@ -8,7 +8,9 @@ import Header from './header';
 import Sidebar from './sidebar';
 import Setting from './setting';
 import Loader from './loader';
-import Login from "../../app/auth/login/page";
+import Login from "@/app/auth/login/page";
+import Lockscreen from "@/app/auth/lock/page";
+import Error from "@/app/not-found";
 
 export default function DefaultLayout({ children }) {
 
@@ -82,6 +84,25 @@ export default function DefaultLayout({ children }) {
         dispatch(toggle_user(get_session('user')));
 
     }, [config.user.update]);
+
+
+    useEffect(() => {
+        const userSession = get_session('user');
+        const isLoggedIn = userSession?.access_token && userSession?.logged;
+
+        if (!isLoggedIn) {
+            router.replace('/auth/login'); // توجيه المستخدم إلى صفحة تسجيل الدخول
+            return; // إنهاء الدالة إذا لم يكن هناك جلسة
+        }
+
+        // تحقق من الحالة
+        setLogged(isLoggedIn);
+        dispatch(toggle_user(userSession));
+
+        // تنفيذ أي إعدادات أخرى تحتاجها
+    }, [config.user.update]);
+
+
     useEffect(() => {
 
         dispatch(toggle_theme(localStorage.getItem('theme') || config.theme));
@@ -107,7 +128,6 @@ export default function DefaultLayout({ children }) {
                 <Setting />
 
                 <div className={`${config.nav} main-container min-h-screen text-black dark:text-white-dark`}>
-
                     {sidebar ? <Sidebar /> : null}
 
 
@@ -115,7 +135,7 @@ export default function DefaultLayout({ children }) {
                         logged ?
                             <div className="main-content">
 
-                                <Header />
+                                <Header setLogged={setLogged} />
 
                                 {
                                     animation &&

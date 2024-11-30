@@ -35,7 +35,7 @@ export default function SelectProduct({
       "Content-Type": "application/json", // إضافة Content-Type
     };
 
-    await fetch("https://sahl.future-developers.cloud/api/admin/product/all", {
+    await fetch("https://webtoon.future-developers.cloud/api/admin/product/all", {
       method: "GET",
       headers: headers
     })

@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import Loader from "@/app/component/loader";
 
 export default function Form_Client({ id }) {
+  
   const router = useRouter();
   const config = useSelector((state) => state.config);
   const [menu, setMenu] = useState("");
@@ -46,7 +47,7 @@ export default function Form_Client({ id }) {
 
   const get_item = async () => {
     await fetch(
-      `https://sahl.future-developers.cloud/api/admin/user/show/${id}}`,
+      `https://webtoon.future-developers.cloud/api/admin/user/show/${id}}`,
       {
         method: "GET",
         headers: {
@@ -114,8 +115,8 @@ export default function Form_Client({ id }) {
     setLoader(true);
 
     const url = id
-      ? `https://sahl.future-developers.cloud/api/admin/user/update/${id}`
-      : "https://sahl.future-developers.cloud/api/admin/user/create";
+      ? `https://webtoon.future-developers.cloud/api/admin/user/update/${id}`
+      : "https://webtoon.future-developers.cloud/api/admin/user/create";
 
     const token = get_session("user")?.access_token;
     if (!token) {
@@ -162,7 +163,7 @@ export default function Form_Client({ id }) {
     }
   try {
       const response = await fetch(
-        `https://sahl.future-developers.cloud/api/admin/user/delete`,
+        `https://webtoon.future-developers.cloud/api/admin/user/delete`,
         {
           method: "DELETE",
           body: JSON.stringify(Id),

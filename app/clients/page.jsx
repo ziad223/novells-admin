@@ -17,7 +17,7 @@ export default function Clients() {
   const config = useSelector((state) => state.config);
   const [data, setData] = useState([]);
 
-
+  
 
   const columns = () => {
     return [
@@ -97,35 +97,37 @@ export default function Clients() {
       },
     ];
   };
-const get = async () => {
-
-    try {
-        const response = await fetch(
-            "https://webtoon.future-developers.cloud/api/admin/user/all",
-            {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${get_session("user")?.access_token}`, // استخدام التوكن في الهيدر
-                },
-            }
-        );
-
+  const get = async () => {
+    await fetch(
+      "https://webtoon.future-developers.cloud/api/admin/user/all",
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${get_session("user")?.access_token}`, // استخدام التوكن في الهيدر
+        },
+      }
+    )
+      .then((response) => {
         if (!response.ok) {
-            throw new Error("Network response was not ok: " + response.statusText);
+          throw new Error("Network response was not ok " + response.statusText);
         }
-
-        const data = await response.json();
-        const users = data.data.filter((user) => user.role === "user");
+        return response.json();
+      })
+      .then((response) => {
+        const users = response.data.data.filter((user) => user.role === "user");
         setData(users);
-    } catch (error) {
-        console.error("There has been a problem with your fetch operation:", error);
-    }
-};
-
+      })
+      .catch((error) => {
+        console.error(
+          "There has been a problem with your fetch operation:",
+          error
+        );
+      });
+  };
   const delete_ = async (payload) => {
     try {
       const response = await fetch(
-        `https://sahl.future-developers.cloud/api/admin/user/delete`,
+        `https://webtoon.future-developers.cloud/api/admin/user/delete`,
         {
           method: "DELETE",
           body: JSON.stringify(payload),

@@ -58,7 +58,6 @@ export default function Header() {
   const removeNotification = (value) => {
     setNotifications(notifications.filter((user) => user.id !== value));
   };
-  console.log(side);
 
   return (
     <header

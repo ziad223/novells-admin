@@ -148,7 +148,7 @@ export default function Products() {
     ];
   };
   const get = async () => {
-    await fetch("https://sahl.future-developers.cloud/api/admin/product/all",  {
+    await fetch("https://webtoon.future-developers.cloud/api/admin/product/all",  {
       method: "GET",
       headers: {
         "Content-Type": "application/json", // Set the content type to JSON
@@ -178,7 +178,7 @@ export default function Products() {
 const delete_ = async (payload) => {
   try {
     const response = await fetch(
-      `https://sahl.future-developers.cloud/api/admin/product/delete`,
+      `https://webtoon.future-developers.cloud/api/admin/product/delete`,
       {
         method: "DELETE",
         body: JSON.stringify(payload),

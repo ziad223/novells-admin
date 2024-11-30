@@ -91,7 +91,7 @@ export default function Admins() {
   };
   const get = async () => {
     await fetch(
-      "https://sahl.future-developers.cloud/api/admin/user/all",
+      "https://webtoon.future-developers.cloud/api/admin/user/all",
       {
         method: "GET",
         headers: {
@@ -121,7 +121,7 @@ export default function Admins() {
   const delete_ = async (payload) => {
     try {
       const response = await fetch(
-        `https://sahl.future-developers.cloud/api/admin/user/delete`,
+        `https://webtoon.future-developers.cloud/api/admin/user/delete`,
         {
           method: "Delete",
           body: JSON.stringify(payload),

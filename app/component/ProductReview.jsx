@@ -2,8 +2,9 @@
 import React, { useState } from 'react';
 import Table from './table';
 import { get_session } from '@/public/script/public';
+import { useRouter } from 'next/navigation';
 const ProductReview = () => {
-
+ const router = useRouter();
 const [data, setData] = useState([]);
 
    const columns = () => {
@@ -75,7 +76,7 @@ const [data, setData] = useState([]);
     ];
   };
    const get = async () => {
-    await fetch("https://sahl.future-developers.cloud/api/admin/product/review/create",  {
+    await fetch("https://webtoon.future-developers.cloud/api/admin/product/review/create",  {
       method: "POST",
       headers: {
         "Content-Type": "application/json", // Set the content type to JSON
@@ -105,7 +106,7 @@ const [data, setData] = useState([]);
 const delete_ = async (payload) => {
   try {
     const response = await fetch(
-      `https://sahl.future-developers.cloud/api/admin/product/delete`,
+      `https://webtoon.future-developers.cloud/api/admin/product/delete`,
       {
         method: "DELETE",
         body: JSON.stringify(payload),

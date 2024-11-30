@@ -35,7 +35,7 @@ export default function SelectUsers({
       "Content-Type": "application/json", // إضافة Content-Type
     };
 
-    await fetch("https://sahl.future-developers.cloud/api/admin/user/all", {
+    await fetch("https://webtoon.future-developers.cloud/api/admin/user/all", {
       method: "GET",
       headers: headers
     })
