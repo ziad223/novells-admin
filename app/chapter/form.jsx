@@ -16,10 +16,6 @@ import Loader from "@/app/component/loader";
 import Image from "next/image";
 
 export default function Form_comics({ id }) {
-
-  const handleShow = (id) => {
-    router.push(`/chapter/${id}`);  // توجيه المستخدم إلى صفحة التفاصيل
-  };
   const router = useRouter();
   const config = useSelector((state) => state.config);
   const [menu, setMenu] = useState("");
@@ -36,6 +32,9 @@ export default function Form_comics({ id }) {
 
     setLoader(false);
   };
+  const handleShowClick = (id) => {
+    router.push(`/chapter/${id}`);
+  };
 
   const get_item = async () => {
     const Id = id ? parseInt(id, 10) : null;
@@ -51,7 +50,7 @@ export default function Form_comics({ id }) {
     };
 
     await fetch(
-      `https://webtoon.future-developers.cloud/api/admin/comics/show/${Id}`,
+      `https://webtoon.future-developers.cloud/api/admin/comics/chapter/${Id}`,
       {
         headers: headers,
         method: "GET",
@@ -89,9 +88,9 @@ export default function Form_comics({ id }) {
     }
   try {
       const response = await fetch(
-        `https://webtoon.future-developers.cloud/api/admin/comics/delete`,
+        `https://webtoon.future-developers.cloud/api/admin/comics/chapter/delete`,
         {
-          method: "DELETE",
+          method: "POST",
           body: JSON.stringify(Id),
           headers: {
             "Content-Type": "application/json", // Set the content type to JSON
@@ -204,10 +203,13 @@ export default function Form_comics({ id }) {
                         </td>
                         <td className="flex justify-center gap-5">
                         <button 
+                          onClick={() => handleShowClick(chapter.id)} 
  className="border border-blue-500 text-blue-500 font-medium px-4 py-2 rounded hover:bg-blue-500 hover:text-white transition duration-300">
                           Show
                         </button>
-                        <button className="border border-red-500 text-red-500 font-medium px-4 py-2 rounded hover:bg-red-500 hover:text-white transition duration-300">
+                        <button
+                          // onClick={() => delete_item(chapter.id)}
+                        className="border border-red-500 text-red-500 font-medium px-4 py-2 rounded hover:bg-red-500 hover:text-white transition duration-300">
                           Delete
                         </button>
 
