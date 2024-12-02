@@ -21,6 +21,8 @@ import { useRouter } from "next/navigation";
 export default function Account() {
   
   let user_data = JSON.parse(localStorage.getItem('user-data'));
+  console.log(user_data);
+  
 
 
   const [openPopup , setOpenPopup] = useState(false);
@@ -34,7 +36,6 @@ export default function Account() {
   const [image, setImage] = useState("");
 
   let router = useRouter();
-
   // const get_data = async () => {
   //   try {
   //     // جلب التوكن

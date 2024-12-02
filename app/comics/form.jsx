@@ -134,25 +134,115 @@ export default function Form_comics({ id }) {
               <div className="flex flex-1 flex-col xl:w-[70%] ">
                 <div className="panel no-select flex-1 px-0 py-6 ltr:xl:mr-6 rtl:xl:ml-6">
                   <div className="px-4">
-                    <div className="mx-auto flex flex-col justify-between lg:flex-row">
-                      <div className="div-2 mb-4 w-full lg:w-1/2 ltr:lg:mr-6 rtl:lg:ml-6">
-                        {/* <Files data={data} setData={setData} /> */}
-                      </div>
+                    <div className="mx-auto flex flex-col justify-between ">
+                     
 
-                      <div className="div-3 w-full lg:w-1/2 ">
+                      <div className="div-3 w-full ">
+                        <Image src={data.comic.vertical_thumbnail} className="mx-auto block" width={300} height={300} alt="comic vertical_thumbnail" />
+
+                      </div>
+                      <div className="div-3 w-full mt-5  ">
                         <div className="flex items-center">
                           <label
                             htmlFor="name"
                             className="mb-0 w-1/3 ltr:mr-2 ltr:pl-8 rtl:ml-2 rtl:pr-8"
                           >
-                            {config.text.name}
+                            {config.text.title}
                           </label>
                           <input
+                          readOnly
                             id="title"
                             type="text"
-                            value={data.name || ""}
+                            value={data.comic.title || ""}
                             onChange={(e) =>
-                              setData({ ...data, name: e.target.value })
+                              setData({ ...data, title: e.target.value })
+                            }
+                            className="form-input flex-1"
+                            autoComplete="off"
+                          />
+                        </div>
+
+                      </div>
+                      <div className="div-3 w-full mt-5  ">
+                        <div className="flex items-center">
+                          <label
+                            htmlFor="summary"
+                            className="mb-0 w-1/3 ltr:mr-2 ltr:pl-8 rtl:ml-2 rtl:pr-8"
+                          >
+                            Summary
+                          </label>
+                          <input
+                            readOnly
+                            id="summary"
+                            type="text"
+                            value={data.comic.summary || ""}
+                            onChange={(e) =>
+                              setData({ ...data, summary: e.target.value })
+                            }
+                            className="form-input flex-1"
+                            autoComplete="off"
+                          />
+                        </div>
+
+                      </div>
+                      <div className="div-3 w-full mt-5  ">
+                        <div className="flex items-center">
+                          <label
+                            htmlFor="day"
+                            className="mb-0 w-1/3 ltr:mr-2 ltr:pl-8 rtl:ml-2 rtl:pr-8"
+                          >
+                            Day
+                          </label>
+                          <input
+                            id="day"
+                            type="text"
+                            value={data.comic.day || ""}
+                            onChange={(e) =>
+                              setData({ ...data, day: e.target.value })
+                            }
+                            className="form-input flex-1"
+                            autoComplete="off"
+                          />
+                        </div>
+
+                      </div>
+                      <div className="div-3 w-full mt-5  ">
+                        <div className="flex items-center">
+                          <label
+                            htmlFor="likes"
+                            className="mb-0 w-1/3 ltr:mr-2 ltr:pl-8 rtl:ml-2 rtl:pr-8"
+                          >
+                            Likes
+                          </label>
+                          <input
+                            readOnly
+                            id="likes"
+                            type="text"
+                            value={data.comic.likes || ""}
+                            onChange={(e) =>
+                              setData({ ...data, likes: e.target.value })
+                            }
+                            className="form-input flex-1"
+                            autoComplete="off"
+                          />
+                        </div>
+
+                      </div>
+                      <div className="div-3 w-full mt-5  ">
+                        <div className="flex items-center">
+                          <label
+                            htmlFor="views"
+                            className="mb-0 w-1/3 ltr:mr-2 ltr:pl-8 rtl:ml-2 rtl:pr-8"
+                          >
+                            Views
+                          </label>
+                          <input
+                            readOnly
+                            id="views"
+                            type="text"
+                            value={data.comic.views || ""}
+                            onChange={(e) =>
+                              setData({ ...data, views: e.target.value })
                             }
                             className="form-input flex-1"
                             autoComplete="off"
@@ -176,7 +266,7 @@ export default function Form_comics({ id }) {
                     <th className="px-6 py-3 text-center font-medium capitalize">ID</th>
                     <th className="px-6 py-3 text-center font-medium capitalize">image</th>
                     <th className="px-6 py-3 text-center font-medium capitalize">Title</th>
-                    <th className="px-6 py-3 text-center font-medium capitalize">allow_comments</th>
+                    <th className="px-6 py-3 text-center font-medium capitalize">likes</th>
                     <th className="px-6 py-3 text-center font-medium capitalize">actions</th>
                   </tr>
                 </thead>
@@ -200,11 +290,12 @@ export default function Form_comics({ id }) {
                       <td className="px-6 py-4 text-center font-light capitalize">{chapter.title}</td>
 
                       <td className="px-6 py-4 text-center font-light capitalize">
-                        {chapter?.allow_comments?.toString()}
+                        {chapter.likes_count}
                         </td>
                         <td className="flex justify-center gap-5">
                         <button 
- className="border border-blue-500 text-blue-500 font-medium px-4 py-2 rounded hover:bg-blue-500 hover:text-white transition duration-300">
+                          onClick={() => handleShow(chapter.id)} 
+                          className="border border-blue-500 text-blue-500 font-medium px-4 py-2 rounded hover:bg-blue-500 hover:text-white transition duration-300">
                           Show
                         </button>
                         <button className="border border-red-500 text-red-500 font-medium px-4 py-2 rounded hover:bg-red-500 hover:text-white transition duration-300">

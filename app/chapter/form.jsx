@@ -1,14 +1,8 @@
 "use client";
 import {
   alert_msg,
-  api,
-  date,
-  fix_date,
-  print,
   get_session,
-  confirm_deletion,
 } from "@/public/script/public";
-import Files from "@/app/component/files";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
@@ -21,7 +15,7 @@ export default function Form_comics({ id }) {
   const [menu, setMenu] = useState("");
   const [data, setData] = useState({});
   const [loader, setLoader] = useState(true);
-  const [chapters, setChapters] = useState([]);
+  const [comments, setComments] = useState([]);
 
   const default_item = async () => {
     setData({
@@ -43,6 +37,7 @@ export default function Form_comics({ id }) {
       setLoader(false);
       return alert_msg("Authorization token is missing", "error");
     }
+    
 
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -65,7 +60,10 @@ export default function Form_comics({ id }) {
       .then((response) => {
         // if (!response.data?.id) return router.replace("/comics");        
         setData(response.data);
-        setChapters(response.data.chapters)
+        setComments(response.data.comments);
+        
+        
+        
         setLoader(false);
         document.title = `${config.text.edit_comics} | ${
           response.data.title || ""
@@ -134,34 +132,28 @@ export default function Form_comics({ id }) {
                 <div className="panel no-select flex-1 px-0 py-6 ltr:xl:mr-6 rtl:xl:ml-6">
                   <div className="px-4">
                     <div className="mx-auto flex flex-col justify-between lg:flex-row">
-                      <div className="div-2 mb-4 w-full lg:w-1/2 ltr:lg:mr-6 rtl:lg:ml-6">
-                        {/* <Files data={data} setData={setData} /> */}
-                      </div>
+                      <Image src={data.thumbnail} className="mx-auto block" width={300} height={300} alt="comic vertical_thumbnail" />
+                         
+                   
 
-                      <div className="div-3 w-full lg:w-1/2 ">
-                        <div className="flex items-center">
-                          <label
-                            htmlFor="name"
-                            className="mb-0 w-1/3 ltr:mr-2 ltr:pl-8 rtl:ml-2 rtl:pr-8"
-                          >
-                            {config.text.name}
-                          </label>
-                          <input
-                            id="title"
-                            type="text"
-                            value={data.name || ""}
-                            onChange={(e) =>
-                              setData({ ...data, name: e.target.value })
-                            }
-                            className="form-input flex-1"
-                            autoComplete="off"
-                          />
-                        </div>
-
-                      </div>
+                     
                     </div>
                   </div>
-
+                  <div className="flex px-10 mt-10 flex-wrap  mx-auto flex-col lg:flex-row gap-3">
+                    {data.images.map((img, index) => {
+                      return (
+                        <Image
+                          key={index} // إضافة المفتاح
+                          src={img?.image_path} // استخدام الرابط من المصفوفة
+                          className="lg:w-1/4 md:1/3 sm:1/2 w-full"
+                          width={200}
+                          height={200}
+                          alt={`Image ${index + 1}`} // إضافة وصف بديل
+                        />
+                      );
+                    })}
+                  </div>
+                 
                 </div>
               </div>
 
@@ -170,55 +162,25 @@ export default function Form_comics({ id }) {
             </div>
             <div className="overflow-x-auto mt-5 rounded-lg shadow-lg">
               <table className="table-auto w-full border-collapse bg-[#0e1726] text-white">
-                <thead>
-                  <tr className="bg-gray-700 text-gray-100">
-                    <th className="px-6 py-3 text-center font-medium capitalize">ID</th>
-                    <th className="px-6 py-3 text-center font-medium capitalize">image</th>
-                    <th className="px-6 py-3 text-center font-medium capitalize">Title</th>
-                    <th className="px-6 py-3 text-center font-medium capitalize">allow_comments</th>
-                    <th className="px-6 py-3 text-center font-medium capitalize">actions</th>
-                  </tr>
-                </thead>
                 <tbody>
-                  {chapters.map((chapter, index) => (
+                  {comments.map((comment, index) => (
                     <tr
-                      key={chapter.id}
-                      className={`text-center ${index % 2 === 0 ? "bg-[#1c2534]" : "bg-[#0e1726]"
-                        }`}
+                      key={comment.id}
+                      className={`${index % 2 === 0 ? "bg-[#1c2534]" : "bg-[#0e1726]"}`}
                     >
-                      <td className="px-6 py-4 text-center font-light capitalize">{chapter.id}</td>
-                      <td className="px-6 py-4">
-                        <Image
-                          src={chapter.thumbnail}
-                          alt={chapter.title}
-                          width={50}
-                          height={70}
-                          className="mx-auto rounded-md shadow-md"
-                        />
+                      <td
+                        className="px-6 py-4  font-light capitalize w-full"
+                        colSpan="100%" // لضمان تمدد الخلية عبر كل الأعمدة
+                      >
+                        {`Comment ${index + 1}: ${comment.comment}  `}
                       </td>
-                      <td className="px-6 py-4 text-center font-light capitalize">{chapter.title}</td>
-
-                      <td className="px-6 py-4 text-center font-light capitalize">
-                        {chapter?.allow_comments?.toString()}
-                        </td>
-                        <td className="flex justify-center gap-5">
-                        <button 
-                          onClick={() => handleShowClick(chapter.id)} 
- className="border border-blue-500 text-blue-500 font-medium px-4 py-2 rounded hover:bg-blue-500 hover:text-white transition duration-300">
-                          Show
-                        </button>
-                        <button
-                          // onClick={() => delete_item(chapter.id)}
-                        className="border border-red-500 text-red-500 font-medium px-4 py-2 rounded hover:bg-red-500 hover:text-white transition duration-300">
-                          Delete
-                        </button>
-
-                        </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+
             </div>
+
             <div
               className={`left-tab no-select mt-6 w-full xl:mt-0 xl:w-[30%] ${menu === "vertical" ? "" : "space"
                 }`}
