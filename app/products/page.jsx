@@ -235,8 +235,8 @@ const delete_ = async (payload) => {
       delete_={delete_}
       search={search}
       async_search={false}
-      btn_name="add_product"
       add={() => router.push(`/products/add`)}
+      btn_name="add_product"
       edit={(id) => router.push(`/products/edit/${id}`)}
       no_delete={!data.length}
       no_search={!data.length}

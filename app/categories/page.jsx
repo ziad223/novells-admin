@@ -74,17 +74,7 @@ export default function Categories() {
           </span>
         ),
       },
-      {
-        accessor: "slug",
-        sortable: true,
-        title: "slug",
-        render: ({ slug, id }) => (
-          <div className="default select-text font-semibold">
-            {(slug)}
-          </div>
-        ),
-      },
-      
+     
     ];
   };
 
@@ -169,6 +159,7 @@ export default function Categories() {
       delete_={delete_}
       search={search}
       async_search={false}
+      add={() => router.push(`/categories/add`)}
       btn_name="add_category"
       edit={(id) => router.push(`/categories/edit/${id}`)}
       no_delete={!data.length}
