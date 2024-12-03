@@ -89,9 +89,9 @@ export default function Form_comics({ id }) {
     }
   try {
       const response = await fetch(
-        `https://webtoon.future-developers.cloud/api/admin/comics/delete`,
+        `https://webtoon.future-developers.cloud/api/admin/comics/chapter/delete`,
         {
-          method: "DELETE",
+          method: "POST",
           body: JSON.stringify(Id),
           headers: {
             "Content-Type": "application/json", // Set the content type to JSON
@@ -298,7 +298,9 @@ export default function Form_comics({ id }) {
                           className="border border-blue-500 text-blue-500 font-medium px-4 py-2 rounded hover:bg-blue-500 hover:text-white transition duration-300">
                           Show
                         </button>
-                        <button className="border border-red-500 text-red-500 font-medium px-4 py-2 rounded hover:bg-red-500 hover:text-white transition duration-300">
+                        <button
+                        onClick={delete_item}
+                        className="border border-red-500 text-red-500 font-medium px-4 py-2 rounded hover:bg-red-500 hover:text-white transition duration-300">
                           Delete
                         </button>
 
