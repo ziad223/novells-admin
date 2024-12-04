@@ -1,5 +1,5 @@
 "use client";
-import Form from "@/app/products/form";
+import Form from "@/app/slider/form";
 
 export default function Add_Product () {
 
