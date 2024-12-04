@@ -84,7 +84,7 @@ export default function Form_Product({ id }) {
     };
 
     await fetch(
-      `https://webtoon.future-developers.cloud/api/admin/product/show/${id}`,
+      `https://webtoon.future-developers.cloud/api/admin/slider/show/${id}`,
       {
         headers: headers,
         method: "GET",
@@ -204,9 +204,9 @@ export default function Form_Product({ id }) {
     };
     try {
       const response = await fetch(
-        `https://webtoon.future-developers.cloud/api/admin/products/delete`,
+        `https://webtoon.future-developers.cloud/api/admin/slider/delete`,
         {
-          method: "DELETE",
+          method: "POST",
           body: JSON.stringify(Id),
           headers: {
             "Content-Type": "application/json", // Set the content type to JSON

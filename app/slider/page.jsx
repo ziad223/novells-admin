@@ -27,14 +27,14 @@ export default function Products() {
         ),
       },
       {
-        accessor: "info",
+        accessor: "Image",
         sortable: true,
-        title: "name",
-        render: ({ thumbnail, id, name }) => (
+        title: "Image",
+        render: ({ image }) => (
           <div className="flex items-center font-semibold">
             <div className="layer-div h-7 w-7 overflow-hidden rounded-[.5rem] ltr:mr-3 rtl:ml-3">
               <img
-                src={`${thumbnail}`}
+                src={`${image}`}
                 className="h-full w-full rounded-[.5rem] object-cover"
                 onLoad={(e) =>
                   e.target.src.includes("_icon")
@@ -44,111 +44,17 @@ export default function Products() {
                 onError={(e) => (e.target.src = `/media/public/empty_icon.png`)}
               />
             </div>
-            <div className="default max-w-[15rem] select-text truncate font-semibold">
-              {name}
-            </div>
+           
           </div>
         ),
       },
-       {
-        accessor: "slug",
-        sortable: true,
-        title: "slug",
-        render: ({ slug }) => (
-          <div className="default select-text font-semibold">{slug}</div>
-        ),
-      },
+       
      
-      {
-        accessor: "category",
-        sortable: true,
-        title: "category",
-        render: ({ category, id }) => (
-          <div>
-            {category ? (
-              <div
-                className="pointer flex items-center font-semibold hover:text-primary hover:underline"
-                onClick={() => router.push(`/categories/edit/${category.id}`)}
-              >
-                {/* <div className="h-7 w-7 rounded-[.5rem] overflow-hidden ltr:mr-3 rtl:ml-3">
-                                    <img 
-                                        src={`${category.image}`} className="h-full w-full rounded-[.5rem] object-cover" 
-                                        onLoad={(e) => e.target.src.includes('_icon') ? e.target.classList.add('empty') : e.target.classList.remove('empty')}
-                                        onError={(e) => e.target.src = `/media/public/empty_icon.png`}
-                                    />
-                                </div> */}
-                <div className="max-w-[10rem] select-text truncate font-semibold">
-                  {category}
-                </div>
-              </div>
-            ) : (
-              <div className="default select-text font-semibold"></div>
-            )}
-          </div>
-        ),
-      },
-       {
-        accessor: "price",
-        sortable: true,
-        title: "price",
-        render: ({ price }) => (
-          <div className="default select-text font-semibold">{price}</div>
-        ),
-      },
-         {
-        accessor: "quantity",
-        sortable: true,
-        title: "quantity",
-        render: ({ quantity }) => (
-          <div className="default select-text font-semibold">{quantity}</div>
-        ),
-      },
-           {
-        accessor: "discount",
-        sortable: true,
-        title: "discount",
-        render: ({ discount }) => (
-          <div className="default select-text font-semibold">{discount}</div>
-        ),
-      },
-      
      
-      // {
-      //   accessor: "orders",
-      //   sortable: true,
-      //   title: "orders",
-      //   render: ({ orders, id }) => (
-      //     <div className="default select-text font-semibold">
-      //       {fix_number(orders)}
-      //     </div>
-      //   ),
-      // },
-      {
-        accessor: "active",
-        sortable: true,
-        title: "status",
-        render: ({ is_available, id }) => (
-          <span
-            className={`badge badge-outline-${is_available ? "success" : "danger"}`}
-          >
-            {is_available ? config.text.active: config.text.stopped}
-          </span>
-        ),
-      },
-      // {
-      //   accessor: "created_at",
-      //   sortable: true,
-      //   title: "date",
-      //   render: ({ created_at, id }) => (
-      //     <div className="default select-text font-semibold">
-      //       {fix_date(created_at)}
-      //     </div>
-      //   ),
-      // },
     ];
   };
   const get = async () => {
-    await fetch("https://webtoon.future-developers.cloud/api/admin/product/all",  {
+    await fetch("https://webtoon.future-developers.cloud/api/admin/slider",  {
       method: "GET",
       headers: {
         "Content-Type": "application/json", // Set the content type to JSON
@@ -178,9 +84,9 @@ export default function Products() {
 const delete_ = async (payload) => {
   try {
     const response = await fetch(
-      `https://webtoon.future-developers.cloud/api/admin/product/delete`,
+      `https://webtoon.future-developers.cloud/api/admin/slider/delete`,
       {
-        method: "DELETE",
+        method: "POST",
         body: JSON.stringify(payload),
         headers: {
           "Content-Type": "application/json", // Set the content type to JSON
@@ -235,9 +141,9 @@ const delete_ = async (payload) => {
       delete_={delete_}
       search={search}
       async_search={false}
-      add={() => router.push(`/products/add`)}
       btn_name="add_product"
-      edit={(id) => router.push(`/products/edit/${id}`)}
+      add={() => router.push(`/slider/add`)}
+      edit={(id) => router.push(`/slider/edit/${id}`)}
       no_delete={!data.length}
       no_search={!data.length}
     />

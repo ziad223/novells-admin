@@ -188,7 +188,7 @@ export default function Getaways() {
     };
 
     await fetch(
-      "https://dailycard.future-developers.cloud/api/admin/payment/orders",
+      "https://webtoon.future-developers.cloud/api/admin/payment/orders",
       {
         headers: headers,
         method: "GET",

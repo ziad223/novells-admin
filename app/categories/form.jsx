@@ -162,90 +162,49 @@ export default function Form_Category({ id }) {
           <div className="flex flex-1 flex-col xl:w-[70%] ">
             <div className="panel no-select flex-1 px-0 py-6 ltr:xl:mr-6 rtl:xl:ml-6">
               <div className="px-4">
-                <div className="mx-auto flex flex-col justify-between lg:flex-row">
-                  <div className="div-2 mb-4 w-full lg:w-1/2 ltr:lg:mr-6 rtl:lg:ml-6">
-                    {/* <Files data={data} setData={setData} /> */}
-                  </div>
-
-                  <div className="div-3 w-full lg:w-1/2 ">
-                    <div className="flex items-center">
-                      <label
-                        htmlFor="name"
-                        className="mb-0 w-1/3 ltr:mr-2 ltr:pl-8 rtl:ml-2 rtl:pr-8"
-                      >
-                        {config.text.name}
-                      </label>
-                      <input
-                        id="title"
-                        type="text"
-                        value={data.name || ""}
-                        onChange={(e) =>
-                          setData({ ...data, name: e.target.value })
-                        }
-                        className="form-input flex-1"
-                        autoComplete="off"
-                      />
+                  <div className="mx-auto flex flex-col justify-between lg:flex-row">
+                    <div className="div-2 flex flex-col mb-4 w-full lg:w-1/2 ltr:lg:mr-6 rtl:lg:ml-6">
+                      {/* Uncomment if needed */}
+                      {/* <Files data={data} setData={setData} /> */}
                     </div>
-                    {/* 
-                    <div className="mt-4 flex items-center">
-                      <label
-                        htmlFor="location"
-                        className="mb-0 w-1/3 ltr:mr-2 ltr:pl-8 rtl:ml-2 rtl:pr-8"
-                      >
-                        {config.text.location}
-                      </label>
-                      <input
-                        id="location"
-                        type="text"
-                        value={data.location || ""}
-                        onChange={(e) =>
-                          setData({ ...data, location: e.target.value })
-                        }
-                        className="form-input flex-1"
-                        autoComplete="off"
-                      />
-                    </div> */}
-                  </div>
-                    <div className="div-3 w-full lg:w-1/2 ">
-                      <div className="flex items-center">
+
+                    <div className="div-3 w-full lg:w-1/2 flex flex-col gap-4">
+                      <div className="flex items-center ">
                         <label
                           htmlFor="name"
-                          className="mb-0 w-1/3 ltr:mr-2 ltr:pl-8 rtl:ml-2 rtl:pr-8"
+                          className="mb-2 w-full pl-8"
+                        >
+                          {config.text.name}
+                        </label>
+                        <input
+                          id="title"
+                          type="text"
+                          value={data.name || ""}
+                          onChange={(e) => setData({ ...data, name: e.target.value })}
+                          className="form-input w-full"
+                          autoComplete="off"
+                        />
+                      </div>
+
+                      <div className="flex  items-center mt-4">
+                        <label
+                          htmlFor="color"
+                          className="mb-2 w-full pl-8"
                         >
                           Color
                         </label>
                         <input
-                          id="title"
+                          id="color"
                           type="color"
                           value={data.color || ""}
-                          onChange={(e) =>
-                            setData({ ...data, color: e.target.value })
-                          }
-                          className="form-input flex-1 mt-5"
+                          onChange={(e) => setData({ ...data, color: e.target.value })}
+                          className="form-input w-full"
                           autoComplete="off"
                         />
                       </div>
-                      {/* 
-                    <div className="mt-4 flex items-center">
-                      <label
-                        htmlFor="location"
-                        className="mb-0 w-1/3 ltr:mr-2 ltr:pl-8 rtl:ml-2 rtl:pr-8"
-                      >
-                        {config.text.location}
-                      </label>
-                      <input
-                        id="location"
-                        type="text"
-                        value={data.location || ""}
-                        onChange={(e) =>
-                          setData({ ...data, location: e.target.value })
-                        }
-                        className="form-input flex-1"
-                        autoComplete="off"
-                      />
-                    </div> */}
                     </div>
-                </div>
+                  </div>
+
               </div>
 
               {/* <hr className="mt-4 border-[#e0e6ed] dark:border-[#1b2e4b]" /> */}

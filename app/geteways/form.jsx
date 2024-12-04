@@ -41,7 +41,7 @@ export default function Form_geteways({ id }) {
     };
 
     await fetch(
-      `https://dailycard.future-developers.cloud/api/admin/payment/gateways/show?gateway_id=${Id}`,
+      `https://webtoon.future-developers.cloud/api/admin/payment/gateways/show?gateway_id=${Id}`,
       {
         headers: headers,
         method: "GET",
@@ -129,7 +129,7 @@ export default function Form_geteways({ id }) {
     }
   try {
       const response = await fetch(
-        `https://dailycard.future-developers.cloud/api/admin/payment/gateways/delete`,
+        `https://webtoon.future-developers.cloud/api/admin/payment/gateways/delete`,
         {
           method: "POST",
           body: JSON.stringify(Id),

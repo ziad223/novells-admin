@@ -106,7 +106,7 @@ const [data, setData] = useState([]);
 const delete_ = async (payload) => {
   try {
     const response = await fetch(
-      `https://webtoon.future-developers.cloud/api/admin/product/delete`,
+      `https://webtoon.future-developers.cloud/api/admin/slider/delete `,
       {
         method: "DELETE",
         body: JSON.stringify(payload),

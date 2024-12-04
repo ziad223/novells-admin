@@ -48,7 +48,7 @@ export default function Form_payment_order({ id }) {
     }
   try {
       const response = await fetch(
-        `https://dailycard.future-developers.cloud/api/admin/payment/orders/delete`,
+        `https://webtoon.future-developers.cloud/api/admin/payment/orders/delete`,
         {
           method: "POST",
           body: JSON.stringify(Id),

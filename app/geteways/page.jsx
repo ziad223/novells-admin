@@ -104,7 +104,7 @@ export default function Getaways() {
     };
 
     await fetch(
-      "https://dailycard.future-developers.cloud/api/admin/payment/gateways",
+      "https://webtoon.future-developers.cloud/api/admin/payment/gateways",
       {
         headers: headers,
         method: "GET",
@@ -131,7 +131,7 @@ export default function Getaways() {
   const delete_ = async (payload) => {
     try {
       const response = await fetch(
-        `https://dailycard.future-developers.cloud/api/admin/payment/gateways/delete`,
+        `https://webtoon.future-developers.cloud/api/admin/payment/gateways/delete`,
         {
           method: "POST",
           body: JSON.stringify(payload),
