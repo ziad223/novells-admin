@@ -190,13 +190,18 @@ export function cookie(name) {
 
   return cookieValue;
 }
-export async function api(url, data, method) {
+export async function api(url, data, method, token) {
   url = url ? `${api_host}/api/${url}` : "";
   data = data ? data : { host: location.host };
   method = method ? method.toUpperCase() : "POST";
 
   async function _get_() {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      method: method,
+      headers: {
+        Authorization: `Bearer ${token || ""}`, // إضافة التوكين هنا
+      },
+    });
     let res = await response.text();
     try {
       return JSON.parse(res);
@@ -204,6 +209,7 @@ export async function api(url, data, method) {
       return res;
     }
   }
+
   async function _other_(token) {
     let form = new FormData();
     Object.keys(data).forEach((key) => {
@@ -216,7 +222,7 @@ export async function api(url, data, method) {
       body: form,
       cache: "no-store",
       headers: {
-        Authorization: `Bearer ${token || ""}`,
+        Authorization: `Bearer ${token || ""}`, // إضافة التوكين هنا
       },
     });
     let res = await response.text();
@@ -232,11 +238,12 @@ export async function api(url, data, method) {
       return await _get_();
     } catch (e) {}
   try {
-    return await _other_(get_session("user")?.access_token);
+    return await _other_(token);
   } catch (e) {}
 
   return false;
 }
+
 
 export function query(query) {
   const urlSearchParams = new URLSearchParams(window.location.search);
