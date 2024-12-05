@@ -130,7 +130,7 @@ const delete_ = async (payload) => {
     return result;
   };
   useEffect(() => {
-    document.title = config.text.all_products;
+    document.title = 'slider';
     get();
   }, []);
   
@@ -141,7 +141,7 @@ const delete_ = async (payload) => {
       delete_={delete_}
       search={search}
       async_search={false}
-      btn_name="add_product"
+      btn_name="add_slider"
       add={() => router.push(`/slider/add`)}
       edit={(id) => router.push(`/slider/edit/${id}`)}
       no_delete={!data.length}

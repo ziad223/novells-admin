@@ -152,6 +152,7 @@ export default function comics() {
       delete_={delete_}
       search={search}
       async_search={false}
+      add={() => router.push(`/comics/add`)}
       edit={(id) => router.push(`/comics/edit/${id}`)}
       no_delete={!data.length}
       no_search={!data.length}

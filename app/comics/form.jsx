@@ -138,7 +138,7 @@ export default function Form_comics({ id }) {
                      
 
                       <div className="div-3 w-full ">
-                        <Image src={data.comic.vertical_thumbnail} className="mx-auto block" width={300} height={300} alt="comic vertical_thumbnail" />
+                        <Image src={data?.comic?.vertical_thumbnail} className="mx-auto block" width={300} height={300} alt="comic vertical_thumbnail" />
 
                       </div>
                       <div className="div-3 w-full mt-5  ">
@@ -153,7 +153,7 @@ export default function Form_comics({ id }) {
                           readOnly
                             id="title"
                             type="text"
-                            value={data.comic.title || ""}
+                            value={data?.comic?.title || ""}
                             onChange={(e) =>
                               setData({ ...data, title: e.target.value })
                             }
@@ -175,7 +175,7 @@ export default function Form_comics({ id }) {
                             readOnly
                             id="summary"
                             type="text"
-                            value={data.comic.summary || ""}
+                            value={data?.comic?.summary || ""}
                             onChange={(e) =>
                               setData({ ...data, summary: e.target.value })
                             }
@@ -196,7 +196,7 @@ export default function Form_comics({ id }) {
                           <input
                             id="day"
                             type="text"
-                            value={data.comic.day || ""}
+                            value={data?.comic?.day || ""}
                             onChange={(e) =>
                               setData({ ...data, day: e.target.value })
                             }
@@ -218,7 +218,7 @@ export default function Form_comics({ id }) {
                             readOnly
                             id="likes"
                             type="text"
-                            value={data.comic.likes || ""}
+                            value={data?.comic?.likes || ""}
                             onChange={(e) =>
                               setData({ ...data, likes: e.target.value })
                             }
@@ -240,7 +240,7 @@ export default function Form_comics({ id }) {
                             readOnly
                             id="views"
                             type="text"
-                            value={data.comic.views || ""}
+                            value={data?.comic?.views || ""}
                             onChange={(e) =>
                               setData({ ...data, views: e.target.value })
                             }

@@ -35,7 +35,7 @@ export default function Select({
     };
 
   const show_category = async () => {
-    await fetch("https://webtoon.future-developers.cloud/api/admin/category/all", {
+    await fetch("https://webtoon.future-developers.cloud/api/admin/categories", {
       method: "GET",
       headers : headers
     })

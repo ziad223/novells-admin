@@ -14,11 +14,8 @@ import { useRouter } from "next/navigation";
 import Files from "@/app/component/files";
 import Select from "@/app/component/select";
 import Loader from "@/app/component/loader";
-import Unit from "../component/unit";
-import { ProductGallery } from "../component/ProductGallery";
-import ProductReview from "../component/ProductReview";
 
-export default function Form_Product({ id }) {
+export default function Form_Slider({ id }) {
   const router = useRouter();
   const config = useSelector((state) => state.config);
   const [menu, setMenu] = useState("");
@@ -101,9 +98,9 @@ export default function Form_Product({ id }) {
         setLoader(false);
         const product = response.data;
         // console.log(product)
-        if (!product?.id) return router.replace("/products");
+        if (!product?.id) return router.replace("/slider");
         setData({ ...product, category_id: product?.category?.id || [] });
-        document.title = `${config.text.product} | ${product.name || ""}`;
+        document.title = `slider | ${product.name || ""}`;
       })
       .catch((error) => {
         console.error(
@@ -122,63 +119,65 @@ export default function Form_Product({ id }) {
       files[`file_${index}_name`] = file.name;
       files[`file_${index}_ext`] = file.ext;
     });
-
-    const { thumbnail, ...rest } = data;
+  
+    const { image, ...rest } = data;
     
     const edit_data = {
       ...rest,
-      thumbnail : typeof thumbnail == 'string' ? null : thumbnail ,
-      category_id: selectCateg?.id ? selectCateg?.id : data?.category?.id,
+      image: typeof image === 'string' ? null : thumbnail, // إذا كان thumbnail هو string، يمكن تحويله إلى null
+      category_id: selectCateg?.id || data?.category?.id,
       is_available: Number(data.is_available),
       is_trend: Number(data.is_trend),
       is_feature: Number(data.is_feature),
       is_new: Number(data.is_new),
     };
-
+  
     if (id) {
       edit_data.product_id = id;
     }
-
+  
     if (typeof data.image === "string") {
-      delete data.image; // حذف الخاصية image إذا كانت قيمتها undefined
+      delete data.image;
     }
-
-    // console.log(data.image);
-
-    if (edit_data.image === undefined) {
-      delete edit_data.image;
-    }
-
-    // تحويل البيانات القديمة من data.keys إلى الشكل المطلوب، مع إزالة القيم الفارغة
-    const oldKeys =
-      data.keys?.reduce((acc, key, index) => {
-        if (key.title && key.type) {
-          acc[`keys[${index}][title]`] = key.title;
-          acc[`keys[${index}][type]`] = key.type;
-        }
-        return acc;
-      }, {}) || {};
-
-    // تحويل البيانات الجديدة من forms إلى الشكل المطلوب
+  
+    // تنسيق البيانات القديمة
+    const oldKeys = data.keys?.reduce((acc, key, index) => {
+      if (key.title && key.type) {
+        acc[`keys[${index}][title]`] = key.title;
+        acc[`keys[${index}][type]`] = key.type;
+      }
+      return acc;
+    }, {}) || {};
+  
+    // تنسيق البيانات الجديدة
     const newKeys = forms.reduce((acc, form, index) => {
-      const newIndex = Object.keys(oldKeys).length / 2 + index; // حساب الفهرس الجديد بناءً على عدد المفاتيح القديمة
+      const newIndex = Object.keys(oldKeys).length / 2 + index; // حساب الفهرس الجديد
       if (form.title && form.type) {
         acc[`keys[${newIndex}][title]`] = form.title;
         acc[`keys[${newIndex}][type]`] = form.type;
       }
       return acc;
     }, {});
-
-    // دمج المفاتيح القديمة مع الجديدة
+  
+    // دمج المفاتيح القديمة والجديدة
     const formattedForms = { ...oldKeys, ...newKeys };
-
+  
     const full_request_data = { ...edit_data, ...formattedForms };
-    const url = id ? `admin/product/update/${id}` : "admin/product/create";
+  
+    const url = id ? `admin/slider/update/${id}` : "admin/slider/store";
+  
+    // تحقق من البيانات في الكود الخاص بك قبل إرسالها
     console.log(full_request_data);
-
-    const response = await api(url, full_request_data);
-    return response;
+  
+    try {
+      const response = await api(url, full_request_data);
+      return response;
+    } catch (error) {
+      console.error("Error during save operation:", error);
+      return { status: "error", message: "There was an error saving data." };
+    }
   };
+  
 
   const save_item = async () => {
     if (!data.name) return alert_msg(config.text.name_required, "error");
@@ -191,7 +190,7 @@ export default function Form_Product({ id }) {
           `${config.text.item} ( ${id} ) - ${config.text.updated_successfully}`
         );
       else alert_msg(config.text.new_item_added);
-      return router.replace("/products");
+      return router.replace("/slider");
     } else {
       alert_msg(config.text.alert_error, "error");
       setLoader(false);
@@ -221,7 +220,7 @@ export default function Form_Product({ id }) {
 
       const result = await response.json();
       alert_msg(`${config.text.deleted_successfully}`);
-      router.replace("/products");
+      router.replace("/slider");
       setLoader(false);
       return true; // Return true to indicate success
     } catch (error) {
@@ -250,11 +249,11 @@ export default function Form_Product({ id }) {
   };
 
   const close_item = async () => {
-    return router.replace("/products");
+    return router.replace("/slider");
   };
 
   useEffect(() => {
-    document.title = id ? config.text.edit_product : config.text.add_product;
+    document.title = id ? 'edit slider' : 'add slider';
     setMenu(localStorage.getItem("menu"));
     id ? get_item() : default_item();
   }, []);
@@ -276,7 +275,7 @@ export default function Form_Product({ id }) {
         formData.append("product_id", id);
 
         // رفع الملف إلى الـ API
-        const response = await fetch("https://webtoon.future-developers.cloud/api/admin/product/image/create", {
+        const response = await fetch("https://webtoon.future-developers.cloud/api/admin/slider/store", {
           method: "POST",
           body: formData,
            headers: {
@@ -310,265 +309,7 @@ export default function Form_Product({ id }) {
                 <Files data={data} setData={setData} />
               </div>
 
-              <hr className="border-[#e0e6ed] dark:border-[#1b2e4b]" />
-
-              <div className="mt-4 px-4">
-                <div className="flex flex-col justify-between lg:flex-row">
-                  <div className="div-2 mb-4 w-full lg:w-1/2 ltr:lg:mr-6 rtl:lg:ml-6">
-                    <div className="mt-4 flex items-center">
-                      <label
-                        htmlFor="name"
-                        className="mb-0 w-1/4 ltr:mr-2 rtl:ml-2"
-                      >
-                        {config.text.name}
-                      </label>
-                      <input
-                        id="name"
-                        type="text"
-                        value={data?.name || ""}
-                        onChange={(e) =>
-                          setData({ ...data, name: e.target.value })
-                        }
-                        className="form-input flex-1"
-                        autoComplete="off"
-                      />
-                    </div>
-                    <div
-                      className={` ${
-                        data.type === "units"
-                          ? "hidden"
-                          : "mt-4 flex items-center"
-                      }`}
-                    >
-                      <label
-                        htmlFor="old_price"
-                        className="mb-0 w-1/4 ltr:mr-2 rtl:ml-2"
-                      >
-                        {config.text.price}
-                      </label>
-                      <input
-                        id="real_price"
-                        type="number"
-                        min="0"
-                        value={data?.price || ""}
-                        onChange={(e) =>
-                          setData({ ...data, price: e.target.value })
-                        }
-                        className="form-input flex-1"
-                        autoComplete="off"
-                        disabled={data.type === "units"}
-                      />
-                    </div>
-
-                    <div
-                      className={` ${
-                        data.type === "units"
-                          ? "hidden"
-                          : "mt-4 flex items-center"
-                      }`}
-                    >
-                      <label
-                        htmlFor="quantity"
-                        className="mb-0 w-1/4 ltr:mr-2 rtl:ml-2"
-                      >
-                        {config.text.quantity}
-                      </label>
-                      <input
-                        id="quantity"
-                        type="text"
-                        value={data?.quantity || ""}
-                        onChange={(e) =>
-                          setData({ ...data, quantity: e.target.value })
-                        }
-                        className="form-input flex-1"
-                        autoComplete="off"
-                        placeholder="No quantity specified !"
-                        disabled={data?.type === "units"}
-                      />
-                    </div>
-                    
-                    
-                      <div
-                      className={` ${
-                        data.type === "units"
-                          ? "hidden"
-                          : "mt-4 flex items-center"
-                      }`}
-                    >
-                      <label
-                        htmlFor="discount"
-                        className="mb-0 w-1/4 ltr:mr-2 rtl:ml-2"
-                      >
-                       discount
-                      </label>
-                      <input
-                        id="discount"
-                        type="text"
-                        value={data?.discount || ""}
-                        onChange={(e) =>
-                          setData({ ...data, discount: e.target.value })
-                        }
-                        className="form-input flex-1"
-                        autoComplete="off"
-                        disabled={data?.type === "units"}
-                      />
-                    </div>
-                    <div className="relative flex items-center md:mt-4">
-                      <div
-                        className="reset-icon flex ltr:right-[.5rem] rtl:left-[.5rem]"
-                        onClick={(e) =>
-                          setData({ ...data, category_id: selectCateg?.id })
-                        }
-                      >
-                        <span className="material-symbols-outlined icon">
-                          close
-                        </span>
-                      </div>
-
-                      <label
-                        htmlFor="category"
-                        className="mb-0 w-1/4 ltr:mr-2 rtl:ml-2"
-                      >
-                        {config.text.category}
-                      </label>
-                      <input
-                        id="category"
-                        type="text"
-                        value={
-                          selectCateg?.name || data?.category?.name || "-"
-                        }
-                        onClick={() => setCategoryMenu(true)}
-                        className="pointer form-input flex-1"
-                        readOnly
-                      />
-                    </div>
-                     <div
-                      className={` ${
-                        data.type === "units"
-                          ? "hidden"
-                          : "mt-4 flex items-center"
-                      }`}
-                    >
-                      <label
-                        htmlFor="brand"
-                        className="mb-0 w-1/4 ltr:mr-2 rtl:ml-2"
-                      >
-                       brand
-                      </label>
-                      <input
-                        id="brand"
-                        type="text"
-                        value={data?.brand || ""}
-                        onChange={(e) =>
-                          setData({ ...data, brand: e.target.value })
-                        }
-                        className="form-input flex-1"
-                        autoComplete="off"
-                        disabled={data?.type === "units"}
-                      />
-                    </div>
-                     <div
-                      className={` ${
-                        data.type === "units"
-                          ? "hidden"
-                          : "mt-4 flex items-center"
-                      }`}
-                    >
-                      <label
-                        htmlFor="code"
-                        className="mb-0 w-1/4 ltr:mr-2 rtl:ml-2"
-                      >
-                       code
-                      </label>
-                      <input
-                        id="code"
-                        type="text"
-                        value={data?.code || ""}
-                        onChange={(e) =>
-                          setData({ ...data, code: e.target.value })
-                        }
-                        className="form-input flex-1"
-                        autoComplete="off"
-                        disabled={data?.type === "units"}
-                      />
-                    </div>
-                  </div>
-
-                  
-                </div>
-              </div>
-
-              {/* error here */}
-              <hr className="mb-6 mt-4 border-[#e0e6ed] dark:border-[#1b2e4b]" />
-
-              <div className="mb-4 mt-6 px-4">
-                <label className="mb-4">description</label>
-
-                <textarea
-                  id="description"
-                  value={data?.description || ""}
-                  onChange={(e) =>
-                    setData({ ...data, description: e.target.value })
-                  }
-                  className="no-resize form-textarea min-h-[80px]"
-                  rows="5"
-                ></textarea>
-              </div>
               
-
-              <hr
-                className={` ${
-                  id ? "block border-[#e0e6ed] dark:border-[#1b2e4b]" : "hidden"
-                }`}
-              />
-              {id &&
-              <>
-               <div className="flex justify-between items-center m-5">
-                    <label className="font-bold text-2xl ">Gallary</label>
-                          <button
-        type="button"
-        className="pointer btn btn-info  w-[20%] gap-2"
-        onClick={handleButtonClick}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 4v16m8-8H4"
-          />
-        </svg>
-        
-        <span>Add Image</span>
-      </button>
-      <input
-        type="file"
-        ref={fileInputRef}
-        className="hidden"
-        onChange={handleFileChange}
-      />
-
-                </div>
-                {data?.images?.length > 0 && 
-            <ProductGallery data = {data.images} get_item = {get_item}/>
-                
-                }
-              </>
-              }
-               
-              <hr
-                className={` ${
-                  id ? "block border-[#e0e6ed] dark:border-[#1b2e4b]" : "hidden"
-                }`}
-              />
-          <ProductReview/>
-
               <Select
                 model={categoryMenu}
                 setModel={setCategoryMenu}
@@ -589,125 +330,7 @@ export default function Form_Product({ id }) {
             }`}
           >
             <div>
-              <div className="panel mb-5 pb-2">
-                <div className="mb-2 mt-1 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div className="check-input">
-                    <label className="relative h-6 w-12">
-                      <input
-                        onChange={() =>
-                          setData({ ...data, is_available: !data.is_available })
-                        }
-                        checked={data.is_available || false}
-                        id="is_available"
-                        type="checkbox"
-                        className="pointer peer absolute z-10 h-full w-full opacity-0"
-                      />
-
-                      <span
-                        className="block h-full rounded-full bg-[#ebedf2] before:absolute before:bottom-1 before:left-1 
-                                                before:h-4 before:w-4 before:rounded-full before:bg-white 
-                                                before:transition-all before:duration-300 peer-checked:bg-primary peer-checked:before:left-7 dark:bg-dark 
-                                                dark:before:bg-white-dark dark:peer-checked:before:bg-white"
-                      ></span>
-                    </label>
-
-                    <label
-                      htmlFor="is_available"
-                      className="pointer ltr:pl-3 rtl:pr-3"
-                    >
-                      is_available
-                    </label>
-                  </div>
-                </div>
-                 <div className="mb-2 mt-1 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div className="check-input">
-                    <label className="relative h-6 w-12">
-                      <input
-                        onChange={() =>
-                          setData({ ...data, is_trend: !data.is_trend })
-                        }
-                        checked={data.is_trend || false}
-                        id="is_trend"
-                        type="checkbox"
-                        className="pointer peer absolute z-10 h-full w-full opacity-0"
-                      />
-
-                      <span
-                        className="block h-full rounded-full bg-[#ebedf2] before:absolute before:bottom-1 before:left-1 
-                                                before:h-4 before:w-4 before:rounded-full before:bg-white 
-                                                before:transition-all before:duration-300 peer-checked:bg-primary peer-checked:before:left-7 dark:bg-dark 
-                                                dark:before:bg-white-dark dark:peer-checked:before:bg-white"
-                      ></span>
-                    </label>
-
-                    <label
-                      htmlFor="is_trend"
-                      className="pointer ltr:pl-3 rtl:pr-3"
-                    >
-                      is_trend
-                    </label>
-                  </div>
-                </div>
-                 <div className="mb-2 mt-1 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div className="check-input">
-                    <label className="relative h-6 w-12">
-                      <input
-                        onChange={() =>
-                          setData({ ...data, is_feature: !data.is_feature })
-                        }
-                        checked={data.is_feature || false}
-                        id="is_feature"
-                        type="checkbox"
-                        className="pointer peer absolute z-10 h-full w-full opacity-0"
-                      />
-
-                      <span
-                        className="block h-full rounded-full bg-[#ebedf2] before:absolute before:bottom-1 before:left-1 
-                                                before:h-4 before:w-4 before:rounded-full before:bg-white 
-                                                before:transition-all before:duration-300 peer-checked:bg-primary peer-checked:before:left-7 dark:bg-dark 
-                                                dark:before:bg-white-dark dark:peer-checked:before:bg-white"
-                      ></span>
-                      
-                    </label>
-
-                    <label
-                      htmlFor="is_feature"
-                      className="pointer ltr:pl-3 rtl:pr-3"
-                    >
-                      is_feature
-                    </label>
-                  </div>
-                </div>
-                 <div className="mb-2 mt-1 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div className="check-input">
-                    <label className="relative h-6 w-12">
-                      <input
-                        onChange={() =>
-                          setData({ ...data, is_new: !data.is_new })
-                        }
-                        checked={data.is_new || false}
-                        id="is_new"
-                        type="checkbox"
-                        className="pointer peer absolute z-10 h-full w-full opacity-0"
-                      />
-
-                      <span
-                        className="block h-full rounded-full bg-[#ebedf2] before:absolute before:bottom-1 before:left-1 
-                                                before:h-4 before:w-4 before:rounded-full before:bg-white 
-                                                before:transition-all before:duration-300 peer-checked:bg-primary peer-checked:before:left-7 dark:bg-dark 
-                                                dark:before:bg-white-dark dark:peer-checked:before:bg-white"
-                      ></span>
-                    </label>
-
-                    <label
-                      htmlFor="is_new"
-                      className="pointer ltr:pl-3 rtl:pr-3"
-                    >
-                      is_new
-                    </label>
-                  </div>
-                </div>
-              </div>
+             
               
 
               <div className="panel">
