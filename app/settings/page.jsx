@@ -21,9 +21,10 @@ export default function Settings () {
     };
     
     const save_data = async() => {
+        const token = get_session("user")?.access_token; // تأكد من استخراج التوكين بشكل صحيح
 
         setLoader1(true);
-        const response = await api('setting/save', {...data, token: config.user.token});
+        const response = await api('admin/settings/update', null, 'POST',  token);
         if ( response.status ) alert_msg('System has been modified successfully');
         else alert_msg('Error, something is went wrong !', 'error');
         setLoader1(false);
