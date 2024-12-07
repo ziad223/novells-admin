@@ -7,10 +7,10 @@ export default function Form_Slider({ id }) {
   const router = useRouter();
   const [data, setData] = useState({ image: "", link: "https://webtoons-clone.vercel.app" });
   const [loader, setLoader] = useState(true);
-  const [imageFile, setImageFile] = useState(null);  // إضافة state لتخزين ملف الصورة
-  const [imagePreview, setImagePreview] = useState(""); // إضافة state لتخزين رابط الصورة المعاينة
+  const [imageFile, setImageFile] = useState(null); // لتخزين ملف الصورة
+  const [imagePreview, setImagePreview] = useState(""); // لتخزين الصورة المعروضة (معاينة)
 
-  // دالة لتحميل البيانات عند التعديل
+  // تحميل بيانات العنصر عند التعديل
   const fetchItem = async () => {
     const token = get_session("user")?.access_token;
     if (!token) {
@@ -40,7 +40,8 @@ export default function Form_Slider({ id }) {
         return router.replace("/slider");
       }
 
-      setData({ ...product, image: product?.category?.id || 1 });
+      setData({ ...product, link: product.link || "" });
+      setImagePreview(product.image); // عرض الصورة الحالية
       setLoader(false);
     } catch (error) {
       console.error("Fetch error:", error);
@@ -48,9 +49,9 @@ export default function Form_Slider({ id }) {
     }
   };
 
-  // دالة لحفظ الصورة والرابط
+  // حفظ الصورة والرابط
   const saveItem = async () => {
-    if (!imageFile) {
+    if (!imageFile && !data.image) {
       alert_msg("Please select an image before saving.", "error");
       return;
     }
@@ -64,8 +65,10 @@ export default function Form_Slider({ id }) {
     }
 
     const formData = new FormData();
-    formData.append("image", imageFile);  // إضافة الصورة إلى FormData
-    formData.append("link", data.link);  // إضافة الرابط
+    if (imageFile) {
+      formData.append("image", imageFile); // إضافة الصورة فقط إذا تم تحديدها
+    }
+    formData.append("link", data.link);
 
     const url = id ? `admin/slider/update/${id}` : "admin/slider/store";
 
@@ -75,7 +78,7 @@ export default function Form_Slider({ id }) {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        body: formData,  // إرسال FormData
+        body: formData,
       });
 
       if (!response.ok) {
@@ -99,59 +102,17 @@ export default function Form_Slider({ id }) {
     }
   };
 
-  // دالة لحذف العنصر
-  const deleteItem = async () => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this item?");
-    if (!confirmDelete) return;
-
-    setLoader(true);
-    const token = get_session("user")?.access_token;
-    if (!token) {
-      setLoader(false);
-      return alert_msg("Authorization token is missing", "error");
-    }
-
-    try {
-      const response = await fetch(
-        `https://webtoon.future-developers.cloud/api/admin/slider/delete/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`Network error: ${response.statusText}`);
-      }
-
-      const result = await response.json();
-      if (result.status === "success") {
-        alert_msg("Item deleted successfully.");
-        router.replace("/slider");
-      } else {
-        alert_msg("Error occurred during deletion", "error");
-      }
-    } catch (error) {
-      console.error("Delete error:", error);
-      alert_msg("Error occurred during deletion", "error");
-    } finally {
-      setLoader(false);
-    }
-  };
-
-  // دالة لتحميل الصورة
+  // تحميل الصورة
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (!file) return;
 
-    setImageFile(file);  // حفظ ملف الصورة في الحالة
-    const imageUrl = URL.createObjectURL(file);  // إنشاء رابط مؤقت للصورة
-    setImagePreview(imageUrl);  // تعيين رابط المعاينة كقيمة
+    setImageFile(file); // حفظ ملف الصورة
+    const imageUrl = URL.createObjectURL(file); // إنشاء رابط معاينة للصورة
+    setImagePreview(imageUrl); // عرض الصورة الجديدة
   };
 
-  // استخدام useEffect لتحميل البيانات عند التعديل
+  // تحميل البيانات عند التعديل
   useEffect(() => {
     document.title = id ? "Edit Slider" : "Add Slider";
     id ? fetchItem() : setLoader(false);
@@ -166,46 +127,44 @@ export default function Form_Slider({ id }) {
           <div className="flex flex-1 flex-col xl:w-[70%]">
             <div className="panel no-select flex-1 px-0 py-6 ltr:xl:mr-6 rtl:xl:ml-6">
               <div className="p-5">
-                  <div className="flex items-center justify-center w-1/2">
-                    <label
-                      htmlFor="dropzone-file"
-                      className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-                    >
-                      <div className="flex flex-col items-center justify-center w-full h-full">
-                        {imagePreview ? (
-                          <img
-                            src={imagePreview}
-                            alt="Preview"
-                            className="w-full h-full object-cover rounded-lg"
+                <div className="flex items-center justify-center w-1/2">
+                  <label
+                    htmlFor="dropzone-file"
+                    className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                  >
+                    <div className="flex flex-col items-center justify-center w-full h-full">
+                      {imagePreview ? (
+                        <img
+                          src={imagePreview}
+                          alt="Preview"
+                          className="w-full h-full object-cover rounded-lg"
+                        />
+                      ) : (
+                        <svg
+                          className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 20 16"
+                        >
+                          <path
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                           />
-                        ) : (
-                          <svg
-                            className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 20 16"
-                          >
-                            <path
-                              stroke="currentColor"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                            />
-                          </svg>
-                        )}
-                      </div>
-                      <input
-                        id="dropzone-file"
-                        type="file"
-                        className="hidden"
-                        onChange={handleFileUpload}
-                      />
-                    </label>
-                  </div>
-
-
+                        </svg>
+                      )}
+                    </div>
+                    <input
+                      id="dropzone-file"
+                      type="file"
+                      className="hidden"
+                      onChange={handleFileUpload}
+                    />
+                  </label>
+                </div>
               </div>
             </div>
           </div>
@@ -218,7 +177,6 @@ export default function Form_Slider({ id }) {
                 <button type="button" className="pointer btn btn-warning w-full gap-2" onClick={() => router.replace("/slider")}>
                   Cancel
                 </button>
-               
               </div>
             </div>
           </div>
