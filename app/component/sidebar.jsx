@@ -5,6 +5,8 @@ import AnimateHeight from "react-animate-height";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import logo from '../../public/logo.png';
 
 export default function Sidebar() {
   const dispatch = useDispatch();
@@ -29,16 +31,18 @@ export default function Sidebar() {
               href="/"
               className="main-logo flex shrink-0 items-center ltr:ml-2 rtl:mr-2"
             >
-              <img
-                className="w-5 flex-none ltr:mr-3 rtl:ml-3"
-                src="/media/public/logo.svg"
+              <Image
+                className="w-10 flex-none ltr:mr-3 rtl:ml-3"
+                src= {logo}
+                width={50}
+                height={50}
               />
               <span
                 className="align-middle text-2xl font-semibold dark:text-white-dark lg:inline"
                 style={{ fontSize: "1.2rem", marginTop: "0" }}
               >
-                <span className="text-primary">{config.text.logo1}</span>{" "}
-                <span className="text-danger">{config.text.logo2}</span>
+                {/* <span className="text-primary">{config.text.logo1}</span>{" "}
+                <span className="text-danger">{config.text.logo2}</span> */}
               </span>
             </Link>
 

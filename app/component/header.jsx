@@ -104,18 +104,14 @@ export default function Header() {
               href="/"
               className="main-logo hidden shrink-0 items-center px-2 lg:flex"
             >
-              <img
-                className="w-5 flex-none ltr:mr-3 rtl:ml-3"
-                src="/media/public/logo.svg"
-              />
-
-              <span
+              
+              {/* <span
                 className="align-middle text-2xl font-semibold dark:text-white-dark lg:inline"
                 style={{ fontSize: "1.2rem", marginTop: "0" }}
               >
                 <span className="text-primary">{config.text.logo1}</span>{" "}
                 <span className="text-danger">{config.text.logo2}</span>
-              </span>
+              </span> */}
             </Link>
           </div>
 
