@@ -81,38 +81,6 @@ export default function Getaways() {
           ),
       },
 
-
-      {
-        accessor: "invoice",
-        sortable: true,
-        title: "invoice",
-        render: ({ id, invoice }) =>
-          id ? (
-            <div className="pointer flex items-center font-semibold hover:text-primary hover:underline">
-              <div
-                className="-mt-[2px] h-7 w-7 overflow-hidden rounded-full ltr:mr-3 rtl:ml-3"
-                onClick={() => openModal(invoice || "")}
-              >
-                <img
-                  src={`${invoice || ""}`}
-                  className="h-full w-full rounded-full object-cover"
-                  onLoad={(e) =>
-                    e.target.src.includes("_icon")
-                      ? e.target.classList.add("empty")
-                      : e.target.classList.remove("empty")
-                  }
-                  onError={(e) =>
-                    (e.target.src = `/media/public/user_icon.png`)
-                  }
-                />
-              </div>
-            </div>
-          ) : (
-            <div className="select-text font-semibold">--</div>
-          ),
-      },
-
-
       {
         accessor: "balance",
         sortable: true,

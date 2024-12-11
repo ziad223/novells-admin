@@ -23,10 +23,22 @@ export default function Form_payment_order({ id }) {
 
   const save = async () => {
     const url = id ? `admin/payment/orders/change` : "";
+    const token = `${get_session("user")?.access_token}`; // استبدل هذا بـ التوكين الخاص بك
 
-    const response = await api(url, data);
-    return response;
+    try {
+      const response = await api(url, data, {
+        headers: {
+          Authorization: `Bearer ${token}`, // إضافة التوكين في الرأس
+        },
+      });
+      console.log(response);
+      return response;
+    } catch (error) {
+      console.error("Error:", error);
+      throw error;
+    }
   };
+
 
   const save_item = async () => {
     setLoader(true);
@@ -64,6 +76,7 @@ export default function Form_payment_order({ id }) {
       }
   
       const result = await response.json();
+      
       alert_msg(`${config.text.deleted_successfully}`);
       router.replace('/payment-order')
       setLoader(false)
@@ -93,22 +106,41 @@ export default function Form_payment_order({ id }) {
             <div className="panel no-select flex-1 px-0 py-6 ltr:xl:mr-6 rtl:xl:ml-6">
               <div className="mt-10 px-4 ">
                 <div className="flex flex-col justify-center lg:flex-row">
-                  <div className="div-2 mb-4 w-full lg:w-1/2 ltr:lg:mr-6 rtl:lg:ml-6">
-                    <div className="flex items-center gap-10">
-                      <select
-                        id="status"
-                        value={data.status || "pending"}
-                        onChange={(e) =>
-                          setData({ ...data, status: e.target.value })
-                        }
-                        className="pointer form-select flex-1"
-                      >
-                        <option value="pending">{config.text.pending}</option>
-                        <option value="paid">{config.text.paid}</option>
-                        <option value="reject">{config.text.reject}</option>
-                      </select>
+                         <div className="div-3 w-full flex flex-col gap-4">
+                      <div className="flex items-center ">
+                        <label
+                          htmlFor="name"
+                          className="mb-2 w-full pl-8"
+                        >
+                          {config.text.name}
+                        </label>
+                        <input
+                          id="title"
+                          type="text"
+                          value={data.name || ""}
+                          onChange={(e) => setData({ ...data, name: e.target.value })}
+                          className="form-input w-full"
+                          autoComplete="off"
+                        />
+                      </div>
+
+                      <div className="flex  items-center mt-4">
+                        <label
+                          htmlFor="color"
+                          className="mb-2 w-full pl-8"
+                        >
+                          Color
+                        </label>
+                        <input
+                          id="color"
+                          type="color"
+                          value={data.color || ""}
+                          onChange={(e) => setData({ ...data, color: e.target.value })}
+                          className="form-input w-full"
+                          autoComplete="off"
+                        />
+                      </div>
                     </div>
-                  </div>
                 </div>
               </div>
             </div>

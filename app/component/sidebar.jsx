@@ -41,8 +41,8 @@ export default function Sidebar() {
                 className="align-middle text-2xl font-semibold dark:text-white-dark lg:inline"
                 style={{ fontSize: "1.2rem", marginTop: "0" }}
               >
-                {/* <span className="text-primary">{config.text.logo1}</span>{" "}
-                <span className="text-danger">{config.text.logo2}</span> */}
+                <span className="text-primary">Dam</span>{" "}
+                <span className="text-danger">Comics</span>
               </span>
             </Link>
 

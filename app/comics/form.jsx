@@ -260,10 +260,11 @@ export default function Form_comics({ id }) {
 
             </div>
             <div className="overflow-x-auto mt-5 rounded-lg shadow-lg">
+              <h2 className="text-xl  text-blue-800 font-bold mb-5">Chapters:-</h2>
               <table className="table-auto w-full border-collapse bg-[#0e1726] text-white">
                 <thead>
                   <tr className="bg-gray-700 text-gray-100">
-                    <th className="px-6 py-3 text-center font-medium capitalize">ID</th>
+                    <th className="px-6 py-3 text-center font-medium capitalize">Chapter Number</th>
                     <th className="px-6 py-3 text-center font-medium capitalize">image</th>
                     <th className="px-6 py-3 text-center font-medium capitalize">Title</th>
                     <th className="px-6 py-3 text-center font-medium capitalize">likes</th>

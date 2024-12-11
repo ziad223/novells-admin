@@ -62,18 +62,7 @@ export default function Categories() {
       //     </span>
       //   ),
       // },
-      {
-        accessor: "active",
-        sortable: true,
-        title: "status",
-        render: ({ status, id }) => (
-          <span
-            className={`badge badge-outline-${status ? "success" : "danger"}`}
-          >
-            {status ? config.text.status : config.text.stopped}
-          </span>
-        ),
-      },
+  
      
     ];
   };

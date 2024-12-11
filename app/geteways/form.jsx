@@ -200,25 +200,7 @@ export default function Form_geteways({ id }) {
                       />
                     </div>
 
-                    <div className="mt-4 flex items-center">
-                      <label
-                        htmlFor="name"
-                        className="mb-0 w-1/4 ltr:mr-2 rtl:ml-2"
-                      >
-                        {config.text.number}
-                      </label>
-                      <input
-                        id="name"
-                        type="number"
-                        value={data?.number || ""}
-                        onChange={(e) =>
-                          setData({ ...data, number: e.target.value })
-                        }
-                        className="form-input flex-1"
-                        autoComplete="off"
-                      />
-                    </div>
-
+               
                     <div className="mt-4 flex items-center">
                       <label
                         htmlFor="name"
