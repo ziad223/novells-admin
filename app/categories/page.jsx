@@ -24,45 +24,16 @@ export default function Categories() {
         accessor: "info",
         sortable: true,
         title: "name",
-        render: ({ name, id, image }) => (
+        render: ({ name }) => (
           <div className=" font-semibold">
-            {/* <div className="layer-div h-7 w-7 overflow-hidden rounded-[.5rem] ltr:mr-3 rtl:ml-3">
-              <img
-                src={`${image}`}
-                className="h-full w-full rounded-[.5rem] object-cover"
-                onLoad={(e) =>
-                  e.target.src.includes("_icon")
-                    ? e.target.classList.add("empty")
-                    : e.target.classList.remove("empty")
-                }
-                onError={(e) => (e.target.src = `/media/public/empty_icon.png`)}
-              />
-            </div> */}
+           
             <div className="default max-w-[15rem] select-text truncate font-semibold">
               {name}
             </div>
           </div>
         ),
       },
-      // {
-      //     accessor: 'products', sortable: true, title: 'products',
-      //     render: ({ products, id }) => <div className="font-semibold select-text default">{products}</div>,
-      // },
-      // {
-      //   accessor: "allow_products",
-      //   sortable: true,
-      //   title: "allow_products",
-      //   render: ({ allow_products, id }) => (
-      //     <span
-      //       className={`badge badge-outline-${
-      //         allow_products ? "success" : "danger"
-      //       }`}
-      //     >
-      //       {allow_products ? config.text.allow : config.text.denied}
-      //     </span>
-      //   ),
-      // },
-  
+     
      
     ];
   };

@@ -26,7 +26,7 @@ export default function Form_payment_order({ id }) {
     const token = `${get_session("user")?.access_token}`; // استبدل هذا بـ التوكين الخاص بك
 
     try {
-      const response = await api(url, data, {
+      const response = await api(url, data, null, token, {
         headers: {
           Authorization: `Bearer ${token}`, // إضافة التوكين في الرأس
         },
@@ -53,8 +53,17 @@ export default function Form_payment_order({ id }) {
       setLoader(false);
     }
   };
+  
 
   const delete_item = async () => {
+    const token = get_session("user")?.access_token;
+    if (!token) {
+      alert("Token not found");
+      return;
+    }
+
+    console.log("Sending request with token:", token);
+    
     const Id = {
       id: [id]
     }
@@ -66,7 +75,7 @@ export default function Form_payment_order({ id }) {
           body: JSON.stringify(Id),
           headers: {
             "Content-Type": "application/json", // Set the content type to JSON
-            Authorization: `Bearer ${get_session("user")?.access_token}`, // Use the token in the header
+            Authorization: `Bearer ${token}`, // Use the token in the header
           },
         }
       );
@@ -105,43 +114,26 @@ export default function Form_payment_order({ id }) {
           <div className="flex flex-1 flex-col xl:w-[70%]">
             <div className="panel no-select flex-1 px-0 py-6 ltr:xl:mr-6 rtl:xl:ml-6">
               <div className="mt-10 px-4 ">
-                <div className="flex flex-col justify-center lg:flex-row">
-                         <div className="div-3 w-full flex flex-col gap-4">
-                      <div className="flex items-center ">
-                        <label
-                          htmlFor="name"
-                          className="mb-2 w-full pl-8"
-                        >
-                          {config.text.name}
-                        </label>
-                        <input
-                          id="title"
-                          type="text"
-                          value={data.name || ""}
-                          onChange={(e) => setData({ ...data, name: e.target.value })}
-                          className="form-input w-full"
-                          autoComplete="off"
-                        />
-                      </div>
-
-                      <div className="flex  items-center mt-4">
-                        <label
-                          htmlFor="color"
-                          className="mb-2 w-full pl-8"
-                        >
-                          Color
-                        </label>
-                        <input
-                          id="color"
-                          type="color"
-                          value={data.color || ""}
-                          onChange={(e) => setData({ ...data, color: e.target.value })}
-                          className="form-input w-full"
-                          autoComplete="off"
-                        />
-                      </div>
-                    </div>
-                </div>
+                  <div className="flex items-center">
+                    <label
+                      htmlFor="status"
+                      className="mb-0 w-1/3 ltr:mr-2 ltr:pl-8 rtl:ml-2 rtl:pr-8"
+                    >
+                      Status
+                    </label>
+                    <select
+                      id="status"
+                      value={data?.status || ""}
+                      onChange={(e) =>
+                        setData({ ...data, status: e.target.value })
+                      }
+                      className="pointer form-select flex-1"
+                    >
+                      <option value="pending">pending</option>
+                      <option value="paid">paid</option>
+                      <option value="reject">reject</option>
+                    </select>
+                  </div>
               </div>
             </div>
           </div>

@@ -278,7 +278,7 @@ export default function Form_comics({ id }) {
                       className={`text-center ${index % 2 === 0 ? "bg-[#1c2534]" : "bg-[#0e1726]"
                         }`}
                     >
-                      <td className="px-6 py-4 text-center font-light capitalize">{chapter.id}</td>
+                      <td className="px-6 py-4 text-center font-light capitalize">{chapter.chapter_number}</td>
                       <td className="px-6 py-4">
                         <Image
                           src={chapter.thumbnail}

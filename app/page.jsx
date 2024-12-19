@@ -3,8 +3,32 @@
 import { get_session } from "@/public/script/public";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import Chart from "@/app/component/chart";
+import { Line, Doughnut } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+} from "chart.js";
 import axios from "axios";
+import Chart from "./component/chart";
+
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement
+);
 
 export default function Home() {
   const config = useSelector((state) => state.config);
@@ -44,6 +68,45 @@ export default function Home() {
     fetchStatistics();
   }, []);
 
+  // Prepare data for comics by category (Line Chart)
+  const comicsData = {
+    labels: statistics?.comicsByCategory.map((category) => category.category),
+    datasets: [
+      {
+        label: "Comics by Category",
+        data: statistics?.comicsByCategory.map((category) => category.comics_count),
+        borderColor: "#4A90E2", // Color of the line
+        backgroundColor: "rgba(74, 144, 226, 0.2)", // Background under the line
+        fill: true, // Fill area under the line
+        tension: 0.4, // Smooth the line
+        pointBackgroundColor: "#4A90E2", // Color of the points
+        pointBorderColor: "#fff", // Border color of the points
+        pointBorderWidth: 2,
+        pointRadius: 5, // Size of the points
+        borderWidth: 2,
+      },
+    ],
+  };
+
+  // Prepare data for users by month (Doughnut Chart)
+  const usersData = {
+    labels: statistics?.usersByMonth.map((user) => `${user.month} ${user.year}`),
+    datasets: [
+      {
+        label: "Users by Month",
+        data: statistics?.usersByMonth.map((user) => user.user_count),
+        backgroundColor: [
+          "#FF6F61", // User Count Color 1
+          "#FFD700", // User Count Color 2
+          "#4CAF50", // User Count Color 3
+          "#2196F3", // User Count Color 4
+          "#9C27B0", // User Count Color 5
+        ],
+        borderWidth: 0,
+      },
+    ],
+  };
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
@@ -78,11 +141,7 @@ export default function Home() {
               color="warning"
               icon="comic"
               total={statistics.totalComics || 0}
-              series={
-                Array.isArray(statistics.comicsByCategory)
-                  ? statistics.comicsByCategory.map((item) => item.comics_count)
-                  : []
-              }
+              series={[]}
             />
 
             <Chart
@@ -95,60 +154,90 @@ export default function Home() {
               series={[]}
             />
           </div>
-
           {/* Pending Requests */}
           <div className="bg-[#0f1a2c] shadow rounded-lg p-4">
             <h2 className="text-lg font-bold mb-2">Pending Requests</h2>
             <p className="text-xl font-semibold text-red-500">{statistics.pendingRequests || 0}</p>
           </div>
 
-          {/* Comics by Category */}
-          <div className="bg-[#0f1a2c] shadow rounded-lg p-4">
-            <h2 className="text-lg font-bold mb-2">Comics by Category</h2>
-            <div className="overflow-auto">
-              <table className="min-w-full table-auto border-collapse border border-blue-800">
-                <thead>
-                  <tr className="bg-[#0f1a2c]">
-                    <th className="px-4 py-2 border border-blue-800">Category</th>
-                    <th className="px-4 py-2 border border-blue-800">Comics Count</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {statistics.comicsByCategory.map((category, index) => (
-                    <tr key={index} className="bg-[#0f1a2c]">
-                      <td className="px-4 py-2 border border-blue-800">{category.category}</td>
-                      <td className="px-4 py-2 border border-blue-800">{category.comics_count}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
 
-          {/* Users per Month */}
-          <div className="bg-[#0f1a2c] shadow rounded-lg p-4">
-            <h2 className="text-lg font-bold mb-2">Users by Month</h2>
-            <div className="overflow-auto">
-              <table className="min-w-full table-auto border-collapse border border-blue-800">
-                <thead>
-                  <tr className="bg-[#0f1a2c]">
-                    <th className="px-4 py-2 border border-blue-800">Year</th>
-                    <th className="px-4 py-2 border border-blue-800">Month</th>
-                    <th className="px-4 py-2 border border-blue-800">User Count</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {statistics.usersByMonth.map((user, index) => (
-                    <tr key={index} className="bg-[#1a2941]">
-                      <td className="px-4 py-2 border border-blue-800">{user.year}</td>
-                      <td className="px-4 py-2 border border-blue-800">{user.month}</td>
-                      <td className="px-4 py-2 border border-blue-800">{user.user_count}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+         <div className="flex justify-center gap-5 flex-col lg:flex-row">
+            <div className="bg-[#0f1a2c] shadow rounded-lg p-4 lg:w-1/2 w-[90%]">
+              <h2 className="text-lg font-bold mb-2">Comics by Category</h2>
+              <div className="w-full h-[400px]"> {/* Increased height */}
+                <Line
+                  data={comicsData}
+                  options={{
+                    responsive: true,
+                    plugins: {
+                      title: {
+                        display: true,
+                      },
+                      tooltip: {
+                        callbacks: {
+                          label: function (tooltipItem) {
+                            return `${tooltipItem.label}: ${tooltipItem.raw} Comics`;
+                          },
+                        },
+                      },
+                    },
+                    scales: {
+                      x: {
+                        grid: {
+                          display: true, // Show grid lines on the X-axis
+                          color: '#4A90E2', // Color for grid lines
+                        },
+                        ticks: {
+                          beginAtZero: true, // Ensure the ticks start at 0
+                        },
+                        borderColor: '#4A90E2', // Vertical center line color
+                        borderWidth: 2, // Width of the vertical center line
+                      },
+                      y: {
+                        grid: {
+                          display: true, // Show grid lines on the Y-axis
+                          color: '#4A90E2', // Color for grid lines
+                        },
+                        ticks: {
+                          beginAtZero: true, // Ensure the ticks start at 0
+                        },
+                        borderColor: '#4A90E2', // Horizontal center line color
+                        borderWidth: 2, // Width of the horizontal center line
+                      },
+                    },
+                  }}
+                />
+              </div>
+
             </div>
-          </div>
+
+            <div className="bg-[#0f1a2c] shadow rounded-lg p-4 lg:w-1/2 w-[90%] mx-auto">
+              <h2 className="text-lg font-bold mb-2">Users by Month</h2>
+              <div className="flex justify-center items-center w-full h-72">
+                <Doughnut
+                  data={usersData}
+                  options={{
+                    responsive: true,
+                    plugins: {
+                      legend: {
+                        position: "top",
+                      },
+                      tooltip: {
+                        callbacks: {
+                          label: function (tooltipItem) {
+                            return `${tooltipItem.label}: ${tooltipItem.raw} Users`;
+                          },
+                        },
+                      },
+                    },
+                  }}
+                />
+              </div>
+            </div>
+
+         </div>
+
+
         </div>
       ) : (
         <p>Loading statistics...</p>

@@ -42,7 +42,7 @@ export default function Form_Category({ id }) {
 
     const headers = {
       Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json", // إضافة Content-Type
+      "Content-Type": "application/json", 
     };
 
     await fetch(
@@ -75,40 +75,62 @@ export default function Form_Category({ id }) {
   };
 
   const save_item = async () => {
-    if (id ? router.replace("/categories") : "")
+    if (id ? router.replace("/categories") : "") {
       if (!data.title) return alert_msg(config.text.name_required, "error");
-    let edit_data;
-    if (id) {
-      const { id, ...rest } = data;
-      edit_data = {
-        ...rest,
-        category_id: id,
-        status: Number(data.status),
-      };
-    } else {
-      const { id, ...rest } = data;
-      edit_data = {
-        ...rest,
-        status: Number(data.status),
-      };
-    }
 
-    setLoader(true);
-    const url = id ? `admin/categories/${id}` : "admin/categories";
-    const response = await api(url, edit_data);
+      let edit_data;
+      if (id) {
+        const { id, ...rest } = data;
+        edit_data = {
+          ...rest,
+          category_id: id,
+          status: Number(data.status),
+        };
+      } else {
+        const { id, ...rest } = data;
+        edit_data = {
+          ...rest,
+          status: Number(data.status),
+        };
+      }
 
-    if (response.status === "success") {
-      if (id)
-        alert_msg(
-          `${config.text.item} ( ${id} ) - ${config.text.updated_successfully}`
+      setLoader(true);
+      const url = id ? `/admin/categories/${id}` : "/admin/categories";
+
+      // التوكن
+      const token = `${get_session("user").access_token}` // استبدل بـ التوكن الفعلي
+
+      try {
+        const response = await axios.post(
+          url,
+          edit_data,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // إرسال التوكن في الـ headers
+            },
+          }
         );
-      else alert_msg(config.text.new_item_added);
-      return router.replace("/categories");
-    } else if (response.errors) {
-      if (response.errors.name) alert_msg(config.text.error_category, "error");
-    } else alert_msg(config.text.alert_error, "error");
 
-    setLoader(false);
+        if (response.status === 200 && response.data.status === "success") {
+          if (id)
+            alert_msg(
+              `${config.text.item} ( ${id} ) - ${config.text.updated_successfully}`
+            );
+          else alert_msg(config.text.new_item_added);
+          return router.replace("/categories");
+        } else if (response.data.errors) {
+          if (response.data.errors.name)
+            alert_msg(config.text.error_category, "error");
+        } else {
+          alert_msg(config.text.alert_error, "error");
+        }
+      } catch (error) {
+        console.error(error);
+        alert_msg(config.text.alert_error, "error");
+      }
+
+      setLoader(false);
+    }
   };
 
   const delete_item = async () => {
@@ -207,85 +229,7 @@ export default function Form_Category({ id }) {
 
               </div>
 
-              {/* <hr className="mt-4 border-[#e0e6ed] dark:border-[#1b2e4b]" /> */}
 
-              {/* <div className="mt-4 px-4">
-                <div className="flex flex-col justify-between lg:flex-row">
-                  <div className="div-2 mb-4 w-full lg:w-1/2 ltr:lg:mr-6 rtl:lg:ml-6">
-                    <div className="mt-4 flex items-center">
-                      <label
-                        htmlFor="company"
-                        className="mb-0 w-1/4 ltr:mr-2 rtl:ml-2"
-                      >
-                        {config.text.company}
-                      </label>
-                      <input
-                        id="company"
-                        type="text"
-                        value={data.company || ""}
-                        onChange={(e) =>
-                          setData({ ...data, company: e.target.value })
-                        }
-                        className="form-input flex-1"
-                        autoComplete="off"
-                      />
-                    </div>
-
-                    <div className="mt-4 flex items-center">
-                      <label
-                        htmlFor="created_at"
-                        className="mb-0 w-1/4 ltr:mr-2 rtl:ml-2"
-                      >
-                        {config.text.create_date}
-                      </label>
-                      <input
-                        id="created_at"
-                        type="text"
-                        value={fix_date(data.created_at)}
-                        readOnly
-                        className="default form-input flex-1"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="div-3 w-full lg:w-1/2">
-                    <div className="mt-4 flex items-center">
-                      <label
-                        htmlFor="phone"
-                        className="mb-0 w-1/3 ltr:mr-2 ltr:pl-8 rtl:ml-2 rtl:pr-8"
-                      >
-                        {config.text.phone}
-                      </label>
-                      <input
-                        id="phone"
-                        type="text"
-                        value={data.phone || ""}
-                        onChange={(e) =>
-                          setData({ ...data, phone: e.target.value })
-                        }
-                        className="form-input flex-1"
-                        autoComplete="off"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div> */}
-
-              {/* <div className="mt-4 px-4">
-                <label htmlFor="description" className="mb-4">
-                  {config.text.description}
-                </label>
-
-                <textarea
-                  id="description"
-                  value={data.description || ""}
-                  onChange={(e) =>
-                    setData({ ...data, description: e.target.value })
-                  }
-                  className="no-resize form-textarea min-h-[80px]"
-                  rows="5"
-                ></textarea>
-              </div> */}
             </div>
           </div>
 
@@ -296,131 +240,9 @@ export default function Form_Category({ id }) {
           >
             <div>
               <div className="panel mb-5 pb-2">
-                {/* <div className="mt-1 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div>
-                    <label htmlFor="updated_at" className="mb-3">
-                      {config.text.update_date}
-                    </label>
-
-                    <input
-                      id="updated_at"
-                      type="text"
-                      value={fix_date(data.updated_at)}
-                      className="default form-input"
-                      readOnly
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="products" className="mb-3">
-                      {config.text.products}
-                    </label>
-
-                    <input
-                      id="products"
-                      type="number"
-                      value={data.products || 0}
-                      min="0"
-                      className="default form-input"
-                      readOnly
-                    />
-                  </div>
-                </div> */}
-
-                {/* <hr className="mb-6 mt-6 border-[#e0e6ed] dark:border-[#1b2e4b]" /> */}
-
-                {/* <div className="mb-2 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div className="check-input">
-                    <label className="relative h-6 w-12">
-                      <input
-                        onChange={() =>
-                          setData({
-                            ...data,
-                            allow_coupons: !data.allow_coupons,
-                          })
-                        }
-                        checked={data.allow_coupons || false}
-                        id="allow_coupons"
-                        type="checkbox"
-                        className="pointer peer absolute z-10 h-full w-full opacity-0"
-                      />
-
-                      <span
-                        className="block h-full rounded-full bg-[#ebedf2] before:absolute before:bottom-1 before:left-1 
-                                                before:h-4 before:w-4 before:rounded-full before:bg-white 
-                                                before:transition-all before:duration-300 peer-checked:bg-primary peer-checked:before:left-7 dark:bg-dark 
-                                                dark:before:bg-white-dark dark:peer-checked:before:bg-white"
-                      ></span>
-                    </label>
-
-                    <label
-                      htmlFor="allow_coupons"
-                      className="pointer ltr:pl-3 rtl:pr-3"
-                    >
-                      {config.text.coupons}
-                    </label>
-                  </div>
-
-                  <div className="check-input">
-                    <label className="relative h-6 w-12">
-                      <input
-                        onChange={() =>
-                          setData({ ...data, allow_orders: !data.allow_orders })
-                        }
-                        checked={data.allow_orders || false}
-                        id="allow_orders"
-                        type="checkbox"
-                        className="pointer peer absolute z-10 h-full w-full opacity-0"
-                      />
-
-                      <span
-                        className="block h-full rounded-full bg-[#ebedf2] before:absolute before:bottom-1 before:left-1 
-                                                before:h-4 before:w-4 before:rounded-full before:bg-white 
-                                                before:transition-all before:duration-300 peer-checked:bg-primary peer-checked:before:left-7 dark:bg-dark 
-                                                dark:before:bg-white-dark dark:peer-checked:before:bg-white"
-                      ></span>
-                    </label>
-
-                    <label
-                      htmlFor="allow_orders"
-                      className="pointer ltr:pl-3 rtl:pr-3"
-                    >
-                      {config.text.orders}
-                    </label>
-                  </div>
-                </div> */}
-
+               
                 <div className="mb-2 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  {/* <div className="check-input">
-                    <label className="relative h-6 w-12">
-                      <input
-                        onChange={() =>
-                          setData({
-                            ...data,
-                            allow_products: !data.allow_products,
-                          })
-                        }
-                        checked={data.allow_products || false}
-                        id="allow_products"
-                        type="checkbox"
-                        className="pointer peer absolute z-10 h-full w-full opacity-0"
-                      />
-
-                      <span
-                        className="block h-full rounded-full bg-[#ebedf2] before:absolute before:bottom-1 before:left-1 
-                                                before:h-4 before:w-4 before:rounded-full before:bg-white 
-                                                before:transition-all before:duration-300 peer-checked:bg-primary peer-checked:before:left-7 dark:bg-dark 
-                                                dark:before:bg-white-dark dark:peer-checked:before:bg-white"
-                      ></span>
-                    </label>
-
-                    <label
-                      htmlFor="allow_products"
-                      className="pointer ltr:pl-3 rtl:pr-3"
-                    >
-                      {config.text.products}
-                    </label>
-                  </div> */}
+                 
 
                   <div className="check-input">
                     <label className="relative h-6 w-12">

@@ -190,10 +190,11 @@ export function cookie(name) {
 
   return cookieValue;
 }
-export async function api(url, data, method, token) {
+export async function api(url, data, method = "POST", token) {
   url = url ? `${api_host}/api/${url}` : "";
   data = data ? data : { host: location.host };
-  method = method ? method.toUpperCase() : "POST";
+
+  method = (typeof method === "string" ? method : "POST").toUpperCase();
 
   async function _get_() {
     const response = await fetch(url, {
@@ -236,13 +237,14 @@ export async function api(url, data, method, token) {
   if (method === "GET")
     try {
       return await _get_();
-    } catch (e) {}
+    } catch (e) { }
   try {
     return await _other_(token);
-  } catch (e) {}
+  } catch (e) { }
 
   return false;
 }
+
 
 
 export function query(query) {

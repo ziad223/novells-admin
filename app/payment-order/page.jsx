@@ -182,15 +182,16 @@ export default function Getaways() {
   };
 
   const delete_ = async (payload) => {
+    const token = get_session("user").access_token;
     try {
       const response = await fetch(
-        `https://dailycard.future-developers.cloud/api/admin/payment/orders/delete`,
+        `https://webtoon.future-developers.cloud/api/admin/payment/orders/delete`,
         {
           method: "POST",
           body: JSON.stringify(payload),
           headers: {
             "Content-Type": "application/json", // Set the content type to JSON
-            Authorization: `Bearer ${get_session("user")?.access_token}`, // Use the token in the header
+            Authorization: `Bearer ${token}`, // Use the token in the header
           },
         }
       );

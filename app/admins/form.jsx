@@ -241,9 +241,7 @@ export default function Form_Admin({ id }) {
             <div className="panel no-select flex-1 px-0 py-6 ltr:xl:mr-6 rtl:xl:ml-6">
               <div className="px-4">
                 <div className="flex flex-col justify-between lg:flex-row">
-                  <div className="div-2 mb-4 w-full lg:w-1/2 ltr:lg:mr-6 rtl:lg:ml-6">
-                    <Files data={data} setData={setData} user />
-                  </div>
+                 
 
                   <div className="div-3 w-full lg:w-1/2">
                     <div className="flex items-center">
@@ -906,69 +904,7 @@ export default function Form_Admin({ id }) {
             }`}
           >
             <div>
-              <div className="panel mb-5 pb-2 pt-6">
-                <div className="mb-2 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div>
-                    <label htmlFor="created_at" className="mb-3">
-                      {config.text.date}
-                    </label>
-                    <input
-                      id="created_at"
-                      type="text"
-                      value={fix_date(data?.created_at || "")}
-                      readOnly
-                      className="default form-input flex-1"
-                      autoComplete="off"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="updated_at" className="mb-3">
-                      {config.text.last_login}
-                    </label>
-                    <input
-                      id="updated_at"
-                      type="text"
-                      value={fix_date(data?.updated_at) || "-"}
-                      readOnly
-                      className="default form-input flex-1"
-                      autoComplete="off"
-                    />
-                  </div>
-                </div>
-
-                <hr className="mb-6 mt-6 border-[#e0e6ed] dark:border-[#1b2e4b]" />
-
-                <div className="mb-2 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div className="check-input">
-                    <label className="relative h-6 w-12">
-                      <input
-                        onChange={() =>
-                          setData({ ...data, status: !data.status })
-                        }
-                        checked={data?.status || false}
-                        id="active"
-                        type="checkbox"
-                        className="pointer peer absolute z-10 h-full w-full opacity-0"
-                      />
-
-                      <span
-                        className="block h-full rounded-full bg-[#ebedf2] before:absolute before:bottom-1 before:left-1 
-                                                before:h-4 before:w-4 before:rounded-full before:bg-white 
-                                                before:transition-all before:duration-300 peer-checked:bg-primary peer-checked:before:left-7 dark:bg-dark 
-                                                dark:before:bg-white-dark dark:peer-checked:before:bg-white"
-                      ></span>
-                    </label>
-
-                    <label
-                      htmlFor="active"
-                      className="pointer ltr:pl-3 rtl:pr-3"
-                    >
-                      {config.text.active}
-                    </label>
-                  </div>
-                </div>
-              </div>
+            
 
               <div className="panel">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-1">
@@ -1039,59 +975,7 @@ export default function Form_Admin({ id }) {
                     </svg>
                     <span>{config.text.cancel}</span>
                   </button>
-                  {id ? (
-                    <button
-                      type="button"
-                      className="pointer btn btn-danger w-full gap-2"
-                      onClick={delete_item}
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 ltr:mr-2 rtl:ml-2"
-                      >
-                        <path
-                          opacity="0.5"
-                          d="M9.17065 4C9.58249 2.83481 10.6937 2 11.9999 2C13.3062 2 14.4174 2.83481 14.8292 4"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                        ></path>
-                        <path
-                          d="M20.5001 6H3.5"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                        ></path>
-                        <path
-                          d="M18.8334 8.5L18.3735 15.3991C18.1965 18.054 18.108 19.3815 17.243 20.1907C16.378 21 15.0476 21 12.3868 21H11.6134C8.9526 21 7.6222 21 6.75719 20.1907C5.89218 19.3815 5.80368 18.054 5.62669 15.3991L5.16675 8.5"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                        ></path>
-                        <path
-                          opacity="0.5"
-                          d="M9.5 11L10 16"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                        ></path>
-                        <path
-                          opacity="0.5"
-                          d="M14.5 11L14 16"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                        ></path>
-                      </svg>
-                      <span>{config.text.delete}</span>
-                    </button>
-                  ) : (
-                    ""
-                  )}
+                 
                 </div>
               </div>
             </div>

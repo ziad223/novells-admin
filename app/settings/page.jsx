@@ -7,21 +7,19 @@ import Loader from '@/app/component/loader';
 export default function Settings () {
 
     const config = useSelector((state) => state.config);
-    const [tab, setTab] = useState(1);
     const [data, setData] = useState({});
     const [loader1, setLoader1] = useState(false);
-    const [loader2, setLoader2] = useState(false);
     const [loader3, setLoader3] = useState(false);
     const [deleted, setDeleted] = useState([]);
 
     const get_data = async() => {
-        const token = get_session("user")?.access_token; // تأكد من استخراج التوكين بشكل صحيح
-        const response = await api('admin/settings/all', null, 'GET', token); // إرسال التوكين مع الطلب
+        const token = get_session("user")?.access_token; 
+        const response = await api('admin/settings/all', null, 'GET', token); 
         setData(response.settings || {});
     };
     
     const save_data = async() => {
-        const token = get_session("user")?.access_token; // تأكد من استخراج التوكين بشكل صحيح
+        const token = get_session("user")?.access_token; 
 
         setLoader1(true);
         const response = await api('admin/settings/update', null, 'POST',  token);

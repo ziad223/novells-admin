@@ -70,6 +70,15 @@ export default function Form_geteways({ id }) {
       });
   };
   const save = async () => {
+    const token = get_session('user')?.access_token;
+    
+
+
+    if (!token) {
+      alert_msg(config.text.token_required, "error");
+      return;
+    }
+
     let files = {};
     data.new_files?.forEach((file, index) => {
       files[`file_${index}`] = file.file;
@@ -87,7 +96,7 @@ export default function Form_geteways({ id }) {
     };
 
     if (typeof data.photo === "string") {
-      delete data.photo; // حذف الخاصية image إذا كانت قيمتها undefined
+      delete data.photo;
     }
 
     if (edit_data.photo === undefined) {
@@ -97,14 +106,29 @@ export default function Form_geteways({ id }) {
     if (id) {
       edit_data.gateway_id = id;
     }
+
     const url = id
       ? `admin/payment/gateways/update`
       : "admin/payment/gateways/store";
 
-    const response = await api(url, edit_data);
-    // setLoader(false);
-    return response;
+    // إضافة التوكين إلى الهيدر
+    const headers = {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+
+    try {
+      const response = await api(url, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(edit_data), // إرسال البيانات مع الطلب
+      });
+      return response;
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
+
 
   const save_item = async () => {
     if (!data.name) return alert_msg(config.text.name_required, "error");

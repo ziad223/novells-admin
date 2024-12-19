@@ -21,7 +21,8 @@ export default function Table({
   btn_name,
   hide
 }) {
-  const [comics , setComics] = useState(false);
+  const [comics, setComics] = useState(false);
+  const [slider, setSlider] = useState(false);
   useEffect(() => {
     // الحصول على pathname من الـ URL الحالي
     const pathname = window.location.pathname;
@@ -30,8 +31,16 @@ export default function Table({
     if (!pathname.includes('comics')) {
       setComics(true);
     }
-  }, []); // هذه المرة نستخدم [] بحيث يتم الفحص عند تحميل المكون فقط
+  }, []);
+  useEffect(() => {
+    // الحصول على pathname من الـ URL الحالي
+    const pathname = window.location.pathname;
 
+    // تحقق إذا كان الـ URL يحتوي على كلمة "comics"
+    if (!pathname.includes('slider')) {
+      setSlider(true);
+    }
+  }, []);
   const config = useSelector((state) => state.config);
   const isDark =
     useSelector((state) => state.config.theme) === "dark" ? true : false;
@@ -213,15 +222,18 @@ export default function Table({
                   textAlignment: isRtl ? "right" : "left",
                   render: ({ id }) => (
                     <div className="mx-auto flex w-full items-center gap-3">
-                      {!no_edit && (
-                        <button
-                          type="button"
-                          onClick={() => edit(id)}
-                          className="btn border-primary px-3 py-[5px] text-[.8rem] tracking-wide text-primary shadow-none hover:bg-primary hover:text-white"
-                        >
-                          {config.text.show}
-                        </button>
-                      )}
+                      {
+                        slider && !no_edit && (
+                          <button
+                            type="button"
+                            onClick={() => edit(id)}
+                            className="btn border-primary px-3 py-[5px] text-[.8rem] tracking-wide text-primary shadow-none hover:bg-primary hover:text-white"
+                          >
+                            {config.text.show}
+                          </button>
+                        )
+                      }
+
                       {!no_delete && (
                         <button
                           type="button"
