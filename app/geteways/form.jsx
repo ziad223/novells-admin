@@ -1,387 +1,210 @@
-"use client";
-import { api, alert_msg, get_session } from "@/public/script/public";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { alert_msg, get_session } from "@/public/script/public";
 import { useRouter } from "next/navigation";
-import Files from "@/app/component/files";
+import React, { useState, useEffect } from "react";
 
-import Loader from "@/app/component/loader";
-
-export default function Form_geteways({ id }) {
+const Form_gateways = ({ id }) => {
   const router = useRouter();
-  const config = useSelector((state) => state.config);
-  const [menu, setMenu] = useState("");
-  const [data, setData] = useState({});
-  const [loader, setLoader] = useState(true);
+  const [formData, setFormData] = useState({
+    name: "",
+    photo: null,
+    fee: "",
+  });
+  const [preview, setPreview] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const default_item = async () => {
-    setData({
-      // id: 0,
-      name: "",
-      number: "",
-      fee: "",
-      photo: "",
-    });
-    setLoader(false);
+  // جلب البيانات إذا كان هناك ID
+  useEffect(() => {
+    if (id) {
+      const fetchData = async () => {
+        setLoading(true);
+        const token = get_session("user")?.access_token;
+
+        if (!token) {
+          alert("Access token is required. Please login.");
+          setLoading(false);
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `https://webtoon.future-developers.cloud/api/admin/payment/gateways/show?gateway_id=${id}`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            setFormData({
+              name: data.data.name || "",
+              fee: data.data.fee || "",
+              photo: null, // لن نقوم بتعديل photo هنا لأننا نعرض الرابط فقط
+            });
+
+            // تعيين الصورة المعاينة إذا كانت موجودة
+            if (data.data.photo) {
+              setPreview(data.data.photo);
+            }
+          } else {
+            console.error("Failed to fetch data.");
+          }
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchData();
+    }
+  }, [id]);
+
+  const handleChange = (event) => {
+    const { name, value, files } = event.target;
+    if (name === "photo") {
+      const file = files[0];
+      setFormData((prev) => ({ ...prev, photo: file }));
+      setPreview(URL.createObjectURL(file));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
-  // show
-  const get_item = async () => {
-    const Id = id ? parseInt(id, 10) : null;
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true);
 
     const token = get_session("user")?.access_token;
-    if (!token) {
-      setLoader(false);
-      return alert_msg("Authorization token is missing", "error");
-    }
-
-    const headers = {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json", // إضافة Content-Type
-    };
-
-    await fetch(
-      `https://webtoon.future-developers.cloud/api/admin/payment/gateways/show?gateway_id=${Id}`,
-      {
-        headers: headers,
-        method: "GET",
-      }
-    )
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok " + response.statusText);
-        }
-        return response.json();
-      })
-      .then((response) => {
-        const getaway = response.data;
-        if (!getaway?.id) return router.replace("/geteways");
-        setData(getaway);
-        setLoader(false);
-        document.title = `${config.text.payment_getewayts} | ${
-          getaway.name || ""
-        }`;
-      })
-      .catch((error) => {
-        console.error(
-          "There has been a problem with your fetch operation:",
-          error
-        );
-      });
-  };
-  const save = async () => {
-    const token = get_session('user')?.access_token;
-    
-
 
     if (!token) {
-      alert_msg(config.text.token_required, "error");
+      alert("Access token is required. Please login.");
+      setLoading(false);
       return;
     }
 
-    let files = {};
-    data.new_files?.forEach((file, index) => {
-      files[`file_${index}`] = file.file;
-      files[`file_${index}_type`] = file.type;
-      files[`file_${index}_size`] = file.size;
-      files[`file_${index}_name`] = file.name;
-      files[`file_${index}_ext`] = file.ext;
-    });
-
-    const { avatar, ...rest } = data;
-
-    const edit_data = {
-      ...rest,
-      photo: data.avatar,
-    };
-
-    if (typeof data.photo === "string") {
-      delete data.photo;
-    }
-
-    if (edit_data.photo === undefined) {
-      delete edit_data.photo;
-    }
-
-    if (id) {
-      edit_data.gateway_id = id;
+    const requestData = new FormData();
+    requestData.append("name", formData.name);
+    requestData.append("fee", formData.fee);
+    if (formData.photo) {
+      requestData.append("photo", formData.photo);
     }
 
     const url = id
-      ? `admin/payment/gateways/update`
-      : "admin/payment/gateways/store";
+      ? "https://webtoon.future-developers.cloud/api/admin/payment/gateways/update"
+      : "https://webtoon.future-developers.cloud/api/admin/payment/gateways/store";
 
-    // إضافة التوكين إلى الهيدر
-    const headers = {
-      "Authorization": `Bearer ${token}`,
-      "Content-Type": "application/json",
-    };
+    if (id) {
+      requestData.append("gateway_id", id);
+    }
 
     try {
-      const response = await api(url, {
+      const response = await fetch(url, {
         method: "POST",
-        headers: headers,
-        body: JSON.stringify(edit_data), // إرسال البيانات مع الطلب
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: requestData,
       });
-      return response;
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Success:", result);
+
+        alert_msg(
+          id
+            ? "Payment gateway updated successfully!"
+            : "Payment gateway created successfully!"
+        );
+        router.push('/geteways');
+      } else {
+        const errorData = await response.text();
+        console.error("Error:", errorData);
+        alert("Failed to process the request.");
+      }
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setLoading(false);
     }
   };
-
-
-  const save_item = async () => {
-    if (!data.name) return alert_msg(config.text.name_required, "error");
-    setLoader(true);
-    const response = await save();
-    if (response.status === "success") {
-      if (id)
-        alert_msg(
-          `${config.text.item} ( ${id} ) - ${config.text.updated_successfully}`
-        );
-      else alert_msg(config.text.new_item_added);
-      return router.replace("/geteways");
-    } else {
-      alert_msg(config.text.alert_error, "error");
-      setLoader(false);
-    }
-  };
-
-  const delete_item = async () => {
-    const Id = {
-      id: [id]
-    }
-  try {
-      const response = await fetch(
-        `https://webtoon.future-developers.cloud/api/admin/payment/gateways/delete`,
-        {
-          method: "POST",
-          body: JSON.stringify(Id),
-          headers: {
-            "Content-Type": "application/json", // Set the content type to JSON
-            Authorization: `Bearer ${get_session("user")?.access_token}`, // Use the token in the header
-          },
-        }
-      );
-  
-      if (!response.ok) {
-        throw new Error("Network response was not ok " + response.statusText);
-      }
-  
-      const result = await response.json();
-      alert_msg(`${config.text.deleted_successfully}`);
-      router.replace('/geteways')
-      setLoader(false)
-      return true; // Return true to indicate success
-    } catch (error) {
-      console.error("There has been a problem with your fetch operation:", error);
-      return false; // Return false to indicate failure
-    }
-  };
-  const close_item = async () => {
-    return router.replace("/geteways");
-  };
-
-  useEffect(() => {
-    document.title = id ? config.text.edit_getaway : config.text.add_getaway;
-    setMenu(localStorage.getItem("menu"));
-    id ? get_item() : default_item();
-  }, []);
 
   return (
-    <div className="edit-item-info relative">
-      {loader ? (
-        <Loader bg />
-      ) : (
-        <div className="flex flex-col gap-2.5 xl:flex-row">
-          <div className="flex flex-1 flex-col xl:w-[70%]">
-            <div className="panel no-select flex-1 px-0 py-6 ltr:xl:mr-6 rtl:xl:ml-6">
-              <div className="p-5">
-                <Files data={data} setData={setData} />
-              </div>
+    <form onSubmit={handleSubmit} className="p-4 bg-[#1a2941] rounded">
+      <h2 className="text-lg font-bold mb-4">
+        {id ? "Update Payment Gateway" : "Create Payment Gateway"}
+      </h2>
 
-              <hr className="border-[#e0e6ed] dark:border-[#1b2e4b]" />
-
-              <div className="mt-4 px-4">
-                <div className="flex flex-col justify-between lg:flex-row">
-                  <div className="div-2 mb-4 w-full lg:w-1/2 ltr:lg:mr-6 rtl:lg:ml-6">
-                    <div className="mt-4 flex items-center">
-                      <label
-                        htmlFor="name"
-                        className="mb-0 w-1/4 ltr:mr-2 rtl:ml-2"
-                      >
-                        {config.text.name}
-                      </label>
-                      <input
-                        id="name"
-                        type="text"
-                        value={data?.name || ""}
-                        onChange={(e) =>
-                          setData({ ...data, name: e.target.value })
-                        }
-                        className="form-input flex-1"
-                        autoComplete="off"
-                      />
-                    </div>
-
-               
-                    <div className="mt-4 flex items-center">
-                      <label
-                        htmlFor="name"
-                        className="mb-0 w-1/4 ltr:mr-2 rtl:ml-2"
-                      >
-                        {config.text.fee}
-                      </label>
-                      <input
-                        id="name"
-                        type="number"
-                        value={data?.fee || ""}
-                        onChange={(e) =>
-                          setData({ ...data, fee: e.target.value })
-                        }
-                        className="form-input flex-1"
-                        autoComplete="off"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            className={`left-tab no-select mt-6 w-full xl:mt-0 xl:w-[30%] ${
-              menu === "vertical" ? "" : "space"
-            }`}
-          >
-            <div>
-              <div className="panel">
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-1">
-                  <button
-                    type="button"
-                    className="pointer btn btn-success w-full gap-2"
-                    onClick={save_item}
-                  >
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 ltr:mr-2 rtl:ml-2"
-                    >
-                      <path
-                        d="M3.46447 20.5355C4.92893 22 7.28595 22 12 22C16.714 22 19.0711 22 20.5355 20.5355C22 19.0711 22 16.714 22 12C22 11.6585 22 11.4878 21.9848 11.3142C21.9142 10.5049 21.586 9.71257 21.0637 9.09034C20.9516 8.95687 20.828 8.83317 20.5806 8.58578L15.4142 3.41944C15.1668 3.17206 15.0431 3.04835 14.9097 2.93631C14.2874 2.414 13.4951 2.08581 12.6858 2.01515C12.5122 2 12.3415 2 12 2C7.28595 2 4.92893 2 3.46447 3.46447C2 4.92893 2 7.28595 2 12C2 16.714 2 19.0711 3.46447 20.5355Z"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                      />
-                      <path
-                        d="M17 22V21C17 19.1144 17 18.1716 16.4142 17.5858C15.8284 17 14.8856 17 13 17H11C9.11438 17 8.17157 17 7.58579 17.5858C7 18.1716 7 19.1144 7 21V22"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                      />
-                      <path
-                        opacity="0.5"
-                        d="M7 8H13"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                    <span>{config.text.save}</span>
-                  </button>
-                  <button
-                    type="button"
-                    className="pointer btn btn-warning w-full gap-2"
-                    onClick={close_item}
-                  >
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 ltr:mr-2 rtl:ml-2"
-                    >
-                      <path
-                        d="M12 7V13"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                      ></path>
-                      <circle
-                        cx="12"
-                        cy="16"
-                        r="1"
-                        fill="currentColor"
-                      ></circle>
-                      <path
-                        opacity="0.5"
-                        d="M7.84308 3.80211C9.8718 2.6007 10.8862 2 12 2C13.1138 2 14.1282 2.6007 16.1569 3.80211L16.8431 4.20846C18.8718 5.40987 19.8862 6.01057 20.4431 7C21 7.98943 21 9.19084 21 11.5937V12.4063C21 14.8092 21 16.0106 20.4431 17C19.8862 17.9894 18.8718 18.5901 16.8431 19.7915L16.1569 20.1979C14.1282 21.3993 13.1138 22 12 22C10.8862 22 9.8718 21.3993 7.84308 20.1979L7.15692 19.7915C5.1282 18.5901 4.11384 17.9894 3.55692 17C3 16.0106 3 14.8092 3 12.4063V11.5937C3 9.19084 3 7.98943 3.55692 7C4.11384 6.01057 5.1282 5.40987 7.15692 4.20846L7.84308 3.80211Z"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                      ></path>
-                    </svg>
-                    <span>{config.text.cancel}</span>
-                  </button>
-                  {id ? (
-                    <button
-                      type="button"
-                      className="pointer btn btn-danger w-full gap-2"
-                      onClick={delete_item}
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 ltr:mr-2 rtl:ml-2"
-                      >
-                        <path
-                          opacity="0.5"
-                          d="M9.17065 4C9.58249 2.83481 10.6937 2 11.9999 2C13.3062 2 14.4174 2.83481 14.8292 4"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                        ></path>
-                        <path
-                          d="M20.5001 6H3.5"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                        ></path>
-                        <path
-                          d="M18.8334 8.5L18.3735 15.3991C18.1965 18.054 18.108 19.3815 17.243 20.1907C16.378 21 15.0476 21 12.3868 21H11.6134C8.9526 21 7.6222 21 6.75719 20.1907C5.89218 19.3815 5.80368 18.054 5.62669 15.3991L5.16675 8.5"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                        ></path>
-                        <path
-                          opacity="0.5"
-                          d="M9.5 11L10 16"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                        ></path>
-                        <path
-                          opacity="0.5"
-                          d="M14.5 11L14 16"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                        ></path>
-                      </svg>
-                      <span>{config.text.delete}</span>
-                    </button>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              </div>
-            </div>
+      <div className="space-y-4">
+        {/* صورة */}
+        <div>
+          <label className="block text-sm font-medium mb-2">Photo</label>
+          <div className="relative">
+            {preview ? (
+              <img
+                src={preview}
+                alt="Preview"
+                className="w-32 h-32 lg:w-[300px] lg:h-[300px] object-cover rounded border cursor-pointer"
+                onClick={() => document.getElementById('photoInput').click()}
+              />
+            ) : (
+              <button
+                type="button"
+                className="w-32 h-32 bg-gray-200 rounded border"
+                onClick={() => document.getElementById('photoInput').click()}
+              >
+                Add Photo
+              </button>
+            )}
+            <input
+              type="file"
+              id="photoInput"
+              name="photo"
+              accept="image/*"
+              onChange={handleChange}
+              className="hidden"
+            />
           </div>
         </div>
-      )}
-    </div>
+
+        {/* اسم */}
+        <div>
+          <label className="block text-sm font-medium mb-2">Name</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            className="w-full p-4 rounded bg-[#0e1726]"
+            required
+          />
+        </div>
+
+        {/* Fee */}
+        <div>
+          <label className="block text-sm font-medium mb-2">Fee</label>
+          <input
+            type="number"
+            name="fee"
+            value={formData.fee}
+            onChange={handleChange}
+            className="w-full p-4 rounded bg-[#0e1726]"
+            required
+          />
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        className="px-4 block mt-5 py-4 lg:w-[300px]  bg-blue-600 text-white rounded hover:bg-blue-700"
+        disabled={loading}
+      >
+        {loading ? "Processing..." : id ? "Update" : "Create"}
+      </button>
+    </form>
   );
-}
+};
+
+export default Form_gateways;
