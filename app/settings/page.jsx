@@ -92,22 +92,7 @@ export default function Settings () {
                                     <label htmlFor="phone">{config.text.phone}</label>
                                     <input id="phone" type="text" value={data.phone || ''} onChange={(e) => setData({...data, phone: e.target.value})} className="form-input" autoComplete="off"/>
                                 </div>
-                                <div className="grid gap-4 md:grid-cols-2">
-                                    <div>
-                                        <label htmlFor="language">{config.text.language}</label>
-                                        <select id="language" value={data.language || ''} onChange={(e) => setData({...data, language: e.target.value})} className="form-select flex-1 pointer">
-                                            <option value='' hidden>--</option>
-                                            <option value="ar">Arabic</option>
-                                            <option value="en">English</option>
-                                            <option value="fr">French</option>
-                                            <option value="it">Italian</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label htmlFor="location">{config.text.location}</label>
-                                        <input id="location" type="text" value={data.location || ''} onChange={(e) => setData({...data, location: e.target.value})} className="form-input" autoComplete="off"/>
-                                    </div>
-                                </div>
+                               
                                 <div>
                                     <label htmlFor="email">{config.text.email}</label>
                                     <input id="email" type="text" value={data.email || ''} onChange={(e) => setData({...data, email: e.target.value})} className="form-input" autoComplete="off"/>

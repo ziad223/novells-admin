@@ -86,12 +86,28 @@ export default function Getaways() {
         title: "date",
         render: ({ created_at, id }) => (
           <div className="default select-text font-semibold">
-            {/*fix_time*/ fix_date(created_at)}
+            {fix_date(created_at)}
           </div>
         ),
       },
+
     ];
   };
+  function fix_date(dateString) {
+    const date = new Date(dateString);
+
+    const day = String(date.getDate()).padStart(2, '0'); // يوم بصيغة رقمية
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // شهر بصيغة رقمية
+    const year = date.getFullYear(); // السنة
+
+    let hours = date.getHours();
+    const minutes = String(date.getMinutes()).padStart(2, '0'); // الدقائق بصيغة رقمية
+    const ampm = hours >= 12 ? 'PM' : 'AM'; // تحديد AM أو PM
+    hours = hours % 12 || 12; // تحويل الساعة إلى 12 ساعة
+
+    return `${day}-${month}-${year} : ${hours}:${minutes} ${ampm}`;
+  }
+
   const get = async () => {
     const token = get_session("user")?.access_token;
     if (!token) {
