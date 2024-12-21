@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Loader from '@/app/component/loader';
 import AboutSettings from '../component/AboutSettings';
+import TermsSettings from '../component/TermsSettings';
 
 export default function Settings () {
 
@@ -131,19 +132,12 @@ export default function Settings () {
 
                         { loader1 && <Loader /> }
 
-                    </div>:
+                    </div>
+                    
+                    :
                     tab === 2 ?
-                    <div className="relative switch">
-                    <div>
-                        <label htmlFor="twitter">Message 1 </label>
-                        <input id="twitter" type="text" value={data.message1 || ''} onChange={(e) => setData({ ...data, message1: e.target.value })} className="form-input" autoComplete="off" />
-                    </div>
-                     <div className='my-5'>
-                         <label htmlFor="twitter">Message 2 </label>
-                                    <input id="twitter" type="text" value={data.message2 || ''} onChange={(e) => setData({ ...data, message2: e.target.value })} className="form-input" autoComplete="off" />
-                     </div>
-
-                    </div>
+                    <TermsSettings/>
+                    
                     : tab === 3 ?
                     <div className="relative switch">
 

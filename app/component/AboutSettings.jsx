@@ -111,136 +111,147 @@ const SettingsPage = () => {
         }
     };
 
-
     return (
-        <form onSubmit={handleSubmit} className="p-6 max-w-4xl mx-auto bg-gray-800 text-white rounded-md space-y-6">
-            <h1 className="text-2xl font-bold">Settings</h1>
+        <div className="relative border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-2 bg-white dark:bg-[#0e1726]">
+            <h6 className="text-lg font-bold mb-5 no-select">Settings</h6>
 
-            {/* Vision */}
-            <div>
-                <label className="block mb-2">Vision (max 50 characters)</label>
-                <input
-                    type="text"
-                    name="vision"
-                    value={formData.vision}
-                    onChange={handleInputChange}
-                    maxLength="50"
-                    className="w-full p-2 rounded bg-gray-700 border border-gray-600"
-                    required
-                />
-            </div>
-
-            {/* Video */}
-            <div>
-                <label className="block mb-2">Video URL</label>
-                <input
-                    type="url"
-                    name="video"
-                    value={formData.video}
-                    onChange={handleInputChange}
-                    className="w-full p-2 rounded bg-gray-700 border border-gray-600"
-                    required
-                />
-            </div>
-
-            {/* Our Vision Image */}
-            <div>
-                <label className="block mb-2">Our Vision Image</label>
-                <input
-                    type="file"
-                    name="our_vision_image"
-                    onChange={(e) => setFormData({ ...formData, our_vision_image: e.target.files[0] })}
-                    className="w-full p-2 bg-gray-700 rounded"
-                />
-            </div>
-
-            {/* Text fields */}
-            {["our_vision_text1", "our_vision_text2", "our_mission_text1", "our_mission_text2"].map(
-                (field, index) => (
-                    <div key={index}>
-                        <label className="block mb-2">{field.replace(/_/g, " ")} (max 50 characters)</label>
-                        <input
-                            type="text"
-                            name={field}
-                            value={formData[field]}
-                            onChange={handleInputChange}
-                            maxLength="50"
-                            className="w-full p-2 rounded bg-gray-700 border border-gray-600"
-                            required
-                        />
-                    </div>
-                )
-            )}
-
-            {/* Management */}
-            <div>
-                <h2 className="text-xl font-semibold mb-4">Management</h2>
-                {formData.management.map((manager, index) => (
-                    <div key={index} className="mb-4 p-4 bg-gray-700 rounded space-y-2">
+            <form onSubmit={handleSubmit}>
+                <div className="flex flex-col sm:flex-row">
+                    <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 home-form">
+                        {/* Vision */}
                         <div>
-                            <label className="block mb-2">Image</label>
+                            <label htmlFor="vision" className="block mb-2">Vision (max 50 characters)</label>
                             <input
+                                id="vision"
+                                type="text"
+                                name="vision"
+                                value={formData.vision}
+                                onChange={handleInputChange}
+                                maxLength="50"
+                                className="w-full p-2 rounded bg-gray-700 border border-gray-600"
+                                required
+                            />
+                        </div>
+
+                        {/* Video */}
+                        <div>
+                            <label htmlFor="video" className="block mb-2">Video URL</label>
+                            <input
+                                id="video"
+                                type="url"
+                                name="video"
+                                value={formData.video}
+                                onChange={handleInputChange}
+                                className="w-full p-2 rounded bg-gray-700 border border-gray-600"
+                                required
+                            />
+                        </div>
+
+                        {/* Our Vision Image */}
+                        <div>
+                            <label htmlFor="our_vision_image" className="block mb-2">Our Vision Image</label>
+                            <input
+                                id="our_vision_image"
                                 type="file"
-                                onChange={(e) =>
-                                    handleManagementChange(index, "image", e.target.files[0])
-                                }
-                                className="w-full p-2 rounded bg-gray-600"
+                                name="our_vision_image"
+                                onChange={(e) => setFormData({ ...formData, our_vision_image: e.target.files[0] })}
+                                className="w-full p-2 bg-gray-700 rounded"
                             />
                         </div>
 
-                        <div>
-                            <label className="block mb-2">Name</label>
-                            <input
-                                type="text"
-                                value={manager.name}
-                                onChange={(e) =>
-                                    handleManagementChange(index, "name", e.target.value)
-                                }
-                                className="w-full p-2 rounded bg-gray-600 border border-gray-500"
-                                required
-                            />
+                        {/* Text fields */}
+                        {["our_vision_text1", "our_vision_text2", "our_mission_text1", "our_mission_text2"].map(
+                            (field, index) => (
+                                <div key={index}>
+                                    <label htmlFor={field} className="block mb-2">{field.replace(/_/g, " ")}</label>
+                                    <input
+                                        id={field}
+                                        type="text"
+                                        name={field}
+                                        value={formData[field]}
+                                        onChange={handleInputChange}
+                                        maxLength="50"
+                                        className="w-full p-2 rounded bg-gray-700 border border-gray-600"
+                                        required
+                                    />
+                                </div>
+                            )
+                        )}
+
+                        {/* Management */}
+                        <div className="sm:col-span-2">
+                            <h2 className="text-xl font-semibold mb-4">Management</h2>
+                            {formData.management.map((manager, index) => (
+                                <div key={index} className="mb-4 p-4 bg-gray-700 rounded space-y-2">
+                                    <div>
+                                        <label className="block mb-2">Image</label>
+                                        <input
+                                            type="file"
+                                            onChange={(e) =>
+                                                handleManagementChange(index, "image", e.target.files[0])
+                                            }
+                                            className="w-full p-2 rounded bg-gray-600"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block mb-2">Name</label>
+                                        <input
+                                            type="text"
+                                            value={manager.name}
+                                            onChange={(e) =>
+                                                handleManagementChange(index, "name", e.target.value)
+                                            }
+                                            className="w-full p-2 rounded bg-gray-600 border border-gray-500"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block mb-2">Position</label>
+                                        <input
+                                            type="text"
+                                            value={manager.position}
+                                            onChange={(e) =>
+                                                handleManagementChange(index, "position", e.target.value)
+                                            }
+                                            className="w-full p-2 rounded bg-gray-600 border border-gray-500"
+                                            required
+                                        />
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => removeManagementField(index)}
+                                        className="text-red-500 text-sm mt-2"
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            ))}
+                            <button
+                                type="button"
+                                onClick={addManagementField}
+                                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                            >
+                                Add Management
+                            </button>
                         </div>
 
-                        <div>
-                            <label className="block mb-2">Position</label>
-                            <input
-                                type="text"
-                                value={manager.position}
-                                onChange={(e) =>
-                                    handleManagementChange(index, "position", e.target.value)
-                                }
-                                className="w-full p-2 rounded bg-gray-600 border border-gray-500"
-                                required
-                            />
+                        {/* Submit Button */}
+                        <div className="sm:col-span-2 mt-4 flex justify-end">
+                            <button
+                                type="submit"
+                                className={`px-6 py-2 bg-green-600 text-white rounded ${isLoading ? "opacity-50" : "hover:bg-green-700"}`}
+                                disabled={isLoading}
+                            >
+                                {isLoading ? "Saving..." : "Save Settings"}
+                            </button>
                         </div>
-
-                        <button
-                            type="button"
-                            onClick={() => removeManagementField(index)}
-                            className="text-red-500 text-sm mt-2"
-                        >
-                            Remove
-                        </button>
                     </div>
-                ))}
-                <button
-                    type="button"
-                    onClick={addManagementField}
-                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                >
-                    Add Management
-                </button>
-            </div>
-
-            <button
-                type="submit"
-                className={`px-6 py-2 bg-green-600 text-white rounded ${isLoading ? "opacity-50" : "hover:bg-green-700"
-                    }`}
-                disabled={isLoading}
-            >
-                {isLoading ? "Saving..." : "Save Settings"}
-            </button>
-        </form>
+                </div>
+            </form>
+        </div>
     );
 };
 
