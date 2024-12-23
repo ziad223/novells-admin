@@ -102,7 +102,6 @@ const SettingsPage = () => {
                 dataToSubmit
             );
             console.log("Settings updated successfully:", response.data);
-            alert("Settings updated successfully!");
         } catch (error) {
             console.error("Error updating settings:", error);
             alert("Failed to update settings.");
@@ -241,6 +240,7 @@ const SettingsPage = () => {
                         {/* Submit Button */}
                         <div className="sm:col-span-2 mt-4 flex justify-end">
                             <button
+                                onClick={handleSubmit}
                                 type="submit"
                                 className={`px-6 py-2 bg-green-600 text-white rounded ${isLoading ? "opacity-50" : "hover:bg-green-700"}`}
                                 disabled={isLoading}

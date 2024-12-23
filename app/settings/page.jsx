@@ -1,5 +1,5 @@
 "use client";
-import { api, alert_msg, capitalize } from '@/public/script/public';
+import { api, alert_msg, capitalize, get_session } from '@/public/script/public';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Loader from '@/app/component/loader';
@@ -19,16 +19,28 @@ export default function Settings () {
         setData(response.settings || {});
 
     }
-    const save_data = async() => {
-
+    const save_data = async () => {
+        const token = get_session('user').access_token;
         setLoader1(true);
-        const response = await api('settings/update', {...data, token: config.user.token});
-        if ( response.status ) alert_msg('System has been modified successfully');
-        else alert_msg('Error, something is went wrong !', 'error');
-        setLoader1(false);
 
-    }
- 
+        // استدعاء دالة API مع تضمين التوكين
+        const response = await api('admin/settings/update', { ...data }, "POST", token);
+
+        if (response.status) {
+            alert_msg('System has been modified successfully');
+
+            // إعادة تعيين الحقول
+            Object.keys(data).forEach((key) => {
+                data[key] = ""; // تعيين الحقول إلى قيم فارغة
+            });
+        } else {
+            alert_msg('Error, something went wrong!', 'error');
+        }
+
+        setLoader1(false);
+    };
+
+
     useEffect(() => {
         
         document.title = "Settings";
