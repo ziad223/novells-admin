@@ -14,7 +14,7 @@ const TermsSettings = () => {
         try {
             const token = get_session('user').access_token; // استبدل بـ التوكين الخاص بك
             const response = await axios.post(
-                "https://webtoon.future-developers.cloud/api/admin/settings/update",
+                `${api_host}/admin/settings/update`,
                 { message1, message2 },
                 {
                     headers: {

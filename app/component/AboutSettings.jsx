@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { get_session } from "@/public/script/public";
+import { get_session , api_host } from "@/public/script/public";
 
 const SettingsPage = () => {
     const [formData, setFormData] = useState({
@@ -31,7 +31,7 @@ const SettingsPage = () => {
         const fetchSettings = async () => {
             try {
                 const response = await axiosInstance.get(
-                    "https://webtoon.future-developers.cloud/api/admin/settings/all"
+                    `${api_host}/admin/settings/all`
                 );
                 const data = response.data;
                 setFormData({
@@ -98,7 +98,7 @@ const SettingsPage = () => {
 
         try {
             const response = await axiosInstance.post(
-                "https://webtoon.future-developers.cloud/api/admin/settings/update",
+                `${api_host}/admin/settings/update`,
                 dataToSubmit
             );
             console.log("Settings updated successfully:", response.data);

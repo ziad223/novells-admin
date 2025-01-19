@@ -4,7 +4,8 @@ import {
   fix_date,
   fix_number,
   matching,
-  get_session
+  get_session,
+  api_host
 } from "@/public/script/public";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
@@ -35,7 +36,7 @@ export default function SelectProduct({
       "Content-Type": "application/json", // إضافة Content-Type
     };
 
-    await fetch("https://webtoon.future-developers.cloud/api/admin/product/all", {
+    await fetch(`${api_host}/admin/product/all`, {
       method: "GET",
       headers: headers
     })

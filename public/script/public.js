@@ -1,7 +1,7 @@
 import CryptoJS from "./crypto";
 import Swal from "sweetalert2";
-export const api_host = "https://webtoon.future-developers.cloud";
-export const host = "https://webtoon.future-developers.cloud/api/auth/login/storage/profile";
+export const api_host = process.env.NEXT_PUBLIC_API_BASE_URL;
+export const host = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login/storage/profile`;
 
 export function sound(src, vol) {
   const audio = new Audio();

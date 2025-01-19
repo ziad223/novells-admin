@@ -5,6 +5,7 @@ import {
   fix_number,
   get_session,
   matching,
+  api_host
 } from "@/public/script/public";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
@@ -35,7 +36,7 @@ export default function Select({
     };
 
   const show_category = async () => {
-    await fetch("https://webtoon.future-developers.cloud/api/admin/categories", {
+    await fetch(`${api_host}/admin/categories`, {
       method: "GET",
       headers : headers
     })

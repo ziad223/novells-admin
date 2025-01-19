@@ -7,6 +7,7 @@ import {
   print,
   get_session,
   alert_msg,
+  api_host
 } from "@/public/script/public";
 import Table from "@/app/component/table";
 import { useEffect, useState } from "react";
@@ -120,7 +121,7 @@ export default function Getaways() {
     };
 
     await fetch(
-      "https://webtoon.future-developers.cloud/api/admin/payment/gateways",
+      `${api_host}/admin/payment/gateways`,
       {
         headers: headers,
         method: "GET",
@@ -147,7 +148,7 @@ export default function Getaways() {
   const delete_ = async (payload) => {
     try {
       const response = await fetch(
-        `https://webtoon.future-developers.cloud/api/admin/payment/gateways/delete`,
+        `${api_host}/admin/payment/gateways/delete`,
         {
           method: "POST",
           body: JSON.stringify(payload),

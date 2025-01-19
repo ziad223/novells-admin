@@ -1,6 +1,6 @@
 "use client";
 
-import { get_session } from "@/public/script/public";
+import { get_session, api_host } from "@/public/script/public";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Line, Doughnut } from "react-chartjs-2";
@@ -38,7 +38,7 @@ export default function Home() {
   const fetchStatistics = async () => {
     try {
       const response = await axios.get(
-        "https://webtoon.future-developers.cloud/api/admin/dashboard",
+        `${api_host}/admin/dashboard`,
         {
           headers: {
             Authorization: `Bearer ${get_session("user")?.access_token}`,

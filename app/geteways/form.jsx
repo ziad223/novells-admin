@@ -1,4 +1,4 @@
-import { alert_msg, get_session } from "@/public/script/public";
+import { alert_msg, get_session , api_host } from "@/public/script/public";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
@@ -27,7 +27,7 @@ const Form_gateways = ({ id }) => {
 
         try {
           const response = await fetch(
-            `https://webtoon.future-developers.cloud/api/admin/payment/gateways/show?gateway_id=${id}`,
+            `${api_host}/admin/payment/gateways/show?gateway_id=${id}`,
             {
               method: "GET",
               headers: {
@@ -93,8 +93,8 @@ const Form_gateways = ({ id }) => {
     }
 
     const url = id
-      ? "https://webtoon.future-developers.cloud/api/admin/payment/gateways/update"
-      : "https://webtoon.future-developers.cloud/api/admin/payment/gateways/store";
+      ? `${api_host}/admin/payment/gateways/update`
+      : `${api_host}/admin/payment/gateways/store`;
 
     if (id) {
       requestData.append("gateway_id", id);

@@ -21,7 +21,7 @@ const Page = () => {
         console.log(numericCode);
 
         try {
-            const response = await axios.post('https://webtoon.future-developers.cloud/api/auth/forget-password/check', {
+            const response = await axios.post(`${api_host}/auth/forget-password/check`, {
                 code: numericCode, // أرسل الرقم بدلاً من السلسلة
                 session_id: sessionId,
             });
@@ -41,7 +41,7 @@ const Page = () => {
 
     const handleResend = async () => {
         try {
-            const response = await axios.post('https://webtoon.future-developers.cloud/api/auth/resend-code', {
+            const response = await axios.post(`${api_host}/auth/resend-code`, {
                 session_id: sessionId,
             });
             console.log('Resend response:', response.data);

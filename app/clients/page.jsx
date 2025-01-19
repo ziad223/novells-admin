@@ -5,7 +5,9 @@ import {
   fix_date,
   print,
   get_session,
-  alert_msg
+  alert_msg,
+  api_host
+
 } from "@/public/script/public";
 import Table from "@/app/component/table";
 import { useEffect, useState } from "react";
@@ -99,7 +101,7 @@ export default function Clients() {
   };
   const get = async () => {
     await fetch(
-      "https://webtoon.future-developers.cloud/api/admin/user/all",
+      `${api_host}/admin/user/all`,
       {
         method: "GET",
         headers: {
@@ -127,7 +129,7 @@ export default function Clients() {
   const delete_ = async (payload) => {
     try {
       const response = await fetch(
-        `https://webtoon.future-developers.cloud/api/admin/user/delete`,
+        `${api_host}/admin/user/delete`,
         {
           method: "DELETE",
           body: JSON.stringify(payload),

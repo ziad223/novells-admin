@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { get_session, alert_msg } from "@/public/script/public";
+import { get_session, alert_msg , api_host } from "@/public/script/public";
 import Loader from "@/app/component/loader";
 
 export default function Form_Slider({ id }) {
@@ -25,7 +25,7 @@ export default function Form_Slider({ id }) {
 
     try {
       const response = await fetch(
-        `https://webtoon.future-developers.cloud/api/admin/slider/show/${id}`,
+        `${api_host}/admin/slider/show/${id}`,
         { headers, method: "GET" }
       );
 
@@ -73,7 +73,7 @@ export default function Form_Slider({ id }) {
     const url = id ? `admin/slider/update/${id}` : "admin/slider/store";
 
     try {
-      const response = await fetch(`https://webtoon.future-developers.cloud/api/${url}`, {
+      const response = await fetch(`${api_host}/${url}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -8,7 +8,7 @@ export function ProductGallery({data , get_item }) {
 
  async function delete_img (){
      const response = await fetch(
-        `https://webtoon.future-developers.cloud/api/admin/product/image/delete/${id}`,
+        `${api_host}/admin/product/image/delete/${id}`,
         {
           method: "DELETE",
           headers: {

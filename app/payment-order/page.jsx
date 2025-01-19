@@ -9,6 +9,7 @@ import {
   print,
   get_session,
   alert_msg,
+  api_host
 } from "@/public/script/public";
 import Table from "@/app/component/table";
 import { useEffect } from "react";
@@ -173,7 +174,7 @@ export default function Getaways() {
     };
 
     await fetch(
-      "https://webtoon.future-developers.cloud/api/admin/payment/orders",
+      `${api_host}/admin/payment/orders`,
       {
         headers: headers,
         method: "GET",
@@ -202,7 +203,7 @@ export default function Getaways() {
     const token = get_session("user").access_token;
     try {
       const response = await fetch(
-        `https://webtoon.future-developers.cloud/api/admin/payment/orders/delete`,
+        `${api_host}/admin/payment/orders/delete`,
         {
           method: "POST",
           body: JSON.stringify(payload),

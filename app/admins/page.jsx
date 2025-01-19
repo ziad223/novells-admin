@@ -1,7 +1,7 @@
 "use client";
-import { api, matching, fix_date, print, alert_msg } from "@/public/script/public";
-import { get_session } from "@/public/script/public";
-import Table from "@/app/component/table";
+import { api, matching, fix_date, print, alert_msg , api_host } from "../../public/script/public";
+import { get_session } from "../../public/script/public";
+import Table from "../../app/component/table";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
@@ -91,7 +91,7 @@ export default function Admins() {
   };
   const get = async () => {
     await fetch(
-      "https://webtoon.future-developers.cloud/api/admin/user/all",
+      `${api_host}/admin/user/all`,
       {
         method: "GET",
         headers: {
@@ -121,7 +121,7 @@ export default function Admins() {
   const delete_ = async (payload) => {
     try {
       const response = await fetch(
-        `https://webtoon.future-developers.cloud/api/admin/user/delete`,
+        `${api_host}/admin/user/delete`,
         {
           method: "Delete",
           body: JSON.stringify(payload),

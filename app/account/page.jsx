@@ -3,10 +3,8 @@ import {
   api,
   alert_msg,
   file_info,
-  date,
-  fix_date,
   get_session,
-  print,
+  api_host,
 } from "@/public/script/public";
 import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,80 +34,6 @@ export default function Account() {
   const [image, setImage] = useState("");
 
   let router = useRouter();
-  // const get_data = async () => {
-  //   try {
-  //     // جلب التوكن
-  //     const userSession = get_session("user");
-  //     const accessToken = userSession?.access_token;
-  //     // التحقق من وجود التوكن
-  //     if (!accessToken) {
-  //       throw new Error("Access token is missing!");
-  //     }
-
-    
-  //     // التحقق من استجابة السيرفر
-  //     if (!response.ok) {
-  //       throw new Error("Network response was not ok " + response.statusText);
-  //     }
-
-  //     // تحويل استجابة السيرفر إلى JSON
-  //     const user = await response.json();
-
-  //     // إعداد البيانات المسترجعة
-  //     let userData = {
-  //       ...user.data,
-  //       logged: true,
-  //       update: date(),
-  //       access_token: accessToken,
-  //     };
-
-  //     // تسجيل البيانات في وحدة التحكم
-
-  //     // تحديث الحالة والواجهة
-  //     setData(userData);
-  //     dispatch(toggle_user(userData));
-  //   } catch (error) {
-  //     console.error(
-  //       "There has been a problem with your fetch operation:",
-  //       error
-  //     );
-  //   }
-  // };
-
-  // const save_data = async (e) => {
-  //   let dataCreate;
-
-  //   dataCreate = {
-  //     id: data.id,
-  //     name: data.name,
-  //     email: data.email,
-  //     phone: data.phone,
-  //     username: data.username,
-  //     country: data.country,
-  //   };
-
-  //   e.preventDefault();
-  //   setLoader(true);
-  //   const response = await api("admin/user/update", dataCreate);
-  //   // console.log(response);
-  //   setLoader(false);
-
-  //   if (response.status === "success" && response.data) {
-  //     alert_msg(config.text.account_successfully);
-  //     let user = {
-  //       ...response.data,
-  //       logged: true,
-  //       update: date(),
-  //       access_token: config.user?.access_token,
-  //     };
-  //     setData(user);
-  //     dispatch(toggle_user(user));
-  //     setTab(0);
-  //     document.title = `${config.text.account} | ${response.data.name || ""}`;
-  //   } else if (response.status === "exists")
-  //     alert_msg(config.text.email_exists, "error");
-  //   else alert_msg(config.text.alert_error, "error");
-  // };
 
   const validationSchema = Yup.object({
   name: Yup.string().required('name reuired'),
@@ -122,7 +46,7 @@ const token = get_session('user')?.access_token;
 const handleSubmit = async (values) => {
   try {
     const response = await axios.post(
-      'https://webtoon.future-developers.cloud/api/profile/update',
+      `${api_host}/profile/update`,
       values,
       {
         headers: {
@@ -168,7 +92,7 @@ const handleSubmit = async (values) => {
     })
 
     const passwordSubmit = (values) => {
-  axios.post('https://webtoon.future-developers.cloud/api/profile/change-password', values, {
+  axios.post(`${api_host}/profile/change-password`, values, {
     headers: {
       'Content-Type': 'application/json',
        Authorization: `Bearer ${token}` // أضف التوكين هنا
@@ -212,7 +136,7 @@ const handleSubmit = async (values) => {
 // إرسال طلب تحديث البريد الإلكتروني
 // إرسال طلب تحديث البريد الإلكتروني
 const emailSubmit = (values) => {
-  axios.post('https://webtoon.future-developers.cloud/api/profile/update-email', values, {
+  axios.post(`${api_host}/profile/update-email`, values, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
@@ -254,7 +178,7 @@ const emailFormik = useFormik({
 const emailCheckSubmit = (values) => {
   console.log(values);
 
-  axios.post('https://webtoon.future-developers.cloud/api/profile/update-email-check', values, {
+  axios.post(`${api_host}/profile/update-email-check`, values, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
@@ -310,7 +234,7 @@ const emailCheckFormik = useFormik({
     setLoader(true);
 
     await fetch(
-      "https://dailycard.future-developers.cloud/api/user/update/password",
+      `${api_host}/user/update/password`,
       {
         method: "POST",
         body: JSON.stringify(dataPassword),
@@ -371,7 +295,7 @@ const emailCheckFormik = useFormik({
     const formData = new FormData();
     formData.append("avatar", file);
 
-    fetch("https://webtoon.future-developers.cloud/api/profile/update-avatar", {
+    fetch(`${api_host}/profile/update-avatar`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${get_session("user")?.access_token}`,

@@ -7,12 +7,13 @@ import {
   print,
   get_session,
   confirm_deletion,
-} from "@/public/script/public";
-import Files from "@/app/component/files";
+  api_host
+} from "../../public/script/public";
+import Files from "../../app/component/files";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import Loader from "@/app/component/loader";
+import Loader from "../../app/component/loader";
 
 export default function Form_Admin({ id }) {
   const router = useRouter();
@@ -45,7 +46,7 @@ export default function Form_Admin({ id }) {
   };
   const get_item = async () => {
     await fetch(
-      `https://webtoon.future-developers.cloud/api/admin/user/show/${id}`,
+      `${api_host}/admin/user/show/${id}`,
       {
         method: "GET",
         headers: {
@@ -111,8 +112,8 @@ export default function Form_Admin({ id }) {
     }
     setLoader(true);
     const url = id
-      ? `https://webtoon.future-developers.cloud/api/admin/user/update/${id}`
-      : "https://webtoon.future-developers.cloud/api/admin/user/create";
+      ? `${api_host}/admin/user/update/${id}`
+      : `{api_host}/admin/user/create`;
     const token = get_session("user")?.access_token;
     if (!token) {
       setLoader(false);
@@ -156,7 +157,7 @@ export default function Form_Admin({ id }) {
     }
   try {
       const response = await fetch(
-        `https://dailycard.future-developers.cloud/api/admin/user/delete`,
+        `${api_host}/admin/user/delete`,
         {
           method: "POST",
           body: JSON.stringify(Id),

@@ -1,5 +1,5 @@
 "use client";
-import { api, date as dt, alert_msg, matching, fix_date, print, fix_number, get_session } from '@/public/script/public';
+import { api, date as dt, alert_msg, matching, fix_date, print, fix_number, get_session , api_host } from '@/public/script/public';
 import { Fragment, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Table from "@/app/component/table";
@@ -92,7 +92,7 @@ export default function Coupons () {
    const delete_ = async (payload) => {
   try {
     const response = await fetch(
-      `https://webtoon.future-developers.cloud/api/admin/coupon/delete`,
+      `${api_host}/admin/coupon/delete`,
       {
         method: "DELETE",
         body: JSON.stringify(payload),
@@ -144,7 +144,7 @@ export default function Coupons () {
     };
     try {
       const response = await fetch(
-        `https://webtoon.future-developers.cloud/api/admin/coupon/show/${id}`,
+        `${api_host}/admin/coupon/show/${id}`,
         {
           headers: headers,
           method: "GET",
@@ -218,8 +218,8 @@ const save_coupon = async () => {
 
     // تحديد الرابط بناءً على ما إذا كان يتم إنشاء كوبون جديد أو تعديل كوبون موجود
     const endpoint = formData.id 
-        ? `https://webtoon.future-developers.cloud/api/admin/coupon/update/${formData.id}`
-        : 'https://webtoon.future-developers.cloud/api/admin/coupon/create';
+        ? `${api_host}/admin/coupon/update/${formData.id}`
+        : `${api_host}/admin/coupon/create`;
 
     try {
         // إرسال الطلب باستخدام fetch
@@ -262,7 +262,7 @@ const save_coupon = async () => {
 };
 
  const get = async () => {
-    await fetch("https://webtoon.future-developers.cloud/api/admin/coupon/all",  {
+    await fetch(`${api_host}/admin/coupon/all`,  {
       method: "GET",
       headers: {
         "Content-Type": "application/json", // Set the content type to JSON

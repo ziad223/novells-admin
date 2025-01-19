@@ -1,5 +1,5 @@
 "use client";
-import Form from "@/app/admins/form";
+import Form from '@/app/admins/form'
 
 export default function Edit_Admin ({ params }) {
 

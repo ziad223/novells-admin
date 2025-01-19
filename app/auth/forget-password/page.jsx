@@ -16,7 +16,7 @@ export default function Login() {
         setLoader(true);
         setError(null);
         try {
-            const { data } = await axios.post("https://webtoon.future-developers.cloud/api/auth/forget-password", values);
+            const { data } = await axios.post(`${api_host}/auth/forget-password`, values);
             console.log(data); // سجل البيانات المستلمة
 
             if (data.status === 'success') {

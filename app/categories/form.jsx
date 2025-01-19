@@ -1,4 +1,4 @@
-import { alert_msg, get_session } from "@/public/script/public";
+import { alert_msg, get_session , api_host } from "@/public/script/public";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
@@ -25,7 +25,7 @@ const Form_Category = ({ id }) => {
 
         try {
           const response = await fetch(
-            `https://webtoon.future-developers.cloud/api/admin/categories/${id}`,
+            `${api_host}/admin/categories/${id}`,
             {
               method: "GET",
               headers: {
@@ -77,8 +77,8 @@ const Form_Category = ({ id }) => {
     };
 
     const url = id
-      ? `https://webtoon.future-developers.cloud/api/admin/categories/${id}`
-      : "https://webtoon.future-developers.cloud/api/admin/categories";
+      ? `${api_host}/admin/categories/${id}`
+      : `${api_host}/admin/categories`;
 
     if (id) {
       requestData.category_id = id;

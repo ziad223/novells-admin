@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
 import Loader from '@/app/component/loader';
-
+import api_host from  '../../../public/script/public';
 const Page = () => {
   const [loader, setLoader] = useState(false);
   const session_id = sessionStorage.getItem("session_id");
@@ -30,7 +30,7 @@ const Page = () => {
     }),
     onSubmit: (values) => {
       setLoader(true);
-      fetch('https://webtoon.future-developers.cloud/api/auth/forget-password/change', {
+      fetch(`${api_host}/auth/forget-password/change`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

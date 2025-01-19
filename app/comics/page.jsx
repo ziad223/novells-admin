@@ -1,5 +1,5 @@
 "use client";
-import { api, matching, fix_date, get_session, alert_msg } from "@/public/script/public";
+import { api_host, matching, get_session, alert_msg } from "../../public/script/public";
 import Table from "@/app/component/table";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -73,7 +73,7 @@ export default function comics() {
   };
 
   const get = async () => {
-    await fetch("https://webtoon.future-developers.cloud/api/admin/comics", {
+    await fetch(`${api_host}/admin/comics`, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${get_session("user")?.access_token}`, // استخدام التوكن في الهيدر
@@ -99,7 +99,7 @@ export default function comics() {
   const delete_ = async (payload) => {
     try {
       const response = await fetch(
-        `https://webtoon.future-developers.cloud/api/admin/comics/delete`,
+        `${api_host}/admin/comics/delete`,
         {
           method: "POST",
           body: JSON.stringify(payload),

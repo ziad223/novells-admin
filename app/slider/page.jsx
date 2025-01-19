@@ -6,8 +6,9 @@ import {
   fix_number,
   get_session,
   alert_msg,
-} from "@/public/script/public";
-import Table from "@/app/component/table";
+  api_host
+} from "../../public/script/public";
+import Table from "../../app/component/table";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
@@ -54,7 +55,7 @@ export default function Products() {
     ];
   };
   const get = async () => {
-    await fetch("https://webtoon.future-developers.cloud/api/admin/slider",  {
+    await fetch(`${api_host}/admin/slider`,  {
       method: "GET",
       headers: {
         "Content-Type": "application/json", // Set the content type to JSON
@@ -84,7 +85,7 @@ export default function Products() {
 const delete_ = async (payload) => {
   try {
     const response = await fetch(
-      `https://webtoon.future-developers.cloud/api/admin/slider/delete`,
+      `${api_host}/admin/slider/delete`,
       {
         method: "POST",
         body: JSON.stringify(payload),

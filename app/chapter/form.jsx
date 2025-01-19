@@ -2,6 +2,7 @@
 import {
   alert_msg,
   get_session,
+  api_host
 } from "@/public/script/public";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -45,7 +46,7 @@ export default function Form_comics({ id }) {
     };
 
     await fetch(
-      `https://webtoon.future-developers.cloud/api/admin/comics/chapter/${Id}`,
+      `${api_host}/admin/comics/chapter/${Id}`,
       {
         headers: headers,
         method: "GET",
@@ -86,7 +87,7 @@ export default function Form_comics({ id }) {
     }
   try {
       const response = await fetch(
-        `https://webtoon.future-developers.cloud/api/admin/comics/chapter/delete`,
+        `${api_host}/admin/comics/chapter/delete`,
         {
           method: "POST",
           body: JSON.stringify(Id),

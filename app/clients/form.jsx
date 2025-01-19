@@ -7,6 +7,7 @@ import {
   get_session,
   confirm_deletion,
   api,
+  api_host
 } from "@/public/script/public";
 import Files from "@/app/component/files";
 import { useEffect, useState } from "react";
@@ -47,7 +48,7 @@ export default function Form_Client({ id }) {
 
   const get_item = async () => {
     await fetch(
-      `https://webtoon.future-developers.cloud/api/admin/user/show/${id}}`,
+      `${api_host}/admin/user/show/${id}}`,
       {
         method: "GET",
         headers: {
@@ -115,8 +116,8 @@ export default function Form_Client({ id }) {
     setLoader(true);
 
     const url = id
-      ? `https://webtoon.future-developers.cloud/api/admin/user/update/${id}`
-      : "https://webtoon.future-developers.cloud/api/admin/user/create";
+      ? `${api_host}/admin/user/update/${id}`
+      : `${api_host}/admin/user/create`;
 
     const token = get_session("user")?.access_token;
     if (!token) {
@@ -163,7 +164,7 @@ export default function Form_Client({ id }) {
     }
   try {
       const response = await fetch(
-        `https://webtoon.future-developers.cloud/api/admin/user/delete`,
+        `${api_host}/admin/user/delete`,
         {
           method: "DELETE",
           body: JSON.stringify(Id),

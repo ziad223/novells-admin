@@ -7,6 +7,7 @@ import {
   print,
   get_session,
   confirm_deletion,
+  api_host
 } from "@/public/script/public";
 import Files from "@/app/component/files";
 import { useEffect, useState } from "react";
@@ -51,7 +52,7 @@ export default function Form_comics({ id }) {
     };
 
     await fetch(
-      `https://webtoon.future-developers.cloud/api/admin/comics/show/${Id}`,
+      `${api_host}/admin/comics/show/${Id}`,
       {
         headers: headers,
         method: "GET",
@@ -89,7 +90,7 @@ export default function Form_comics({ id }) {
     }
   try {
       const response = await fetch(
-        `https://webtoon.future-developers.cloud/api/admin/comics/chapter/delete`,
+        `${api_host}/admin/comics/chapter/delete`,
         {
           method: "POST",
           body: JSON.stringify(Id),

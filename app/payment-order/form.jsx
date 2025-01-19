@@ -1,5 +1,5 @@
 "use client";
-import { api, alert_msg, get_session } from "@/public/script/public";
+import { api, alert_msg, get_session , api_host } from "@/public/script/public";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
@@ -69,7 +69,7 @@ export default function Form_payment_order({ id }) {
     }
   try {
       const response = await fetch(
-        `https://webtoon.future-developers.cloud/api/admin/payment/orders/delete`,
+        `${api_host}/admin/payment/orders/delete`,
         {
           method: "POST",
           body: JSON.stringify(Id),
