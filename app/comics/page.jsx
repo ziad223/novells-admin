@@ -58,6 +58,7 @@ export default function comics() {
           </span>
         ),
       },
+      
       {
         accessor: "views",
         sortable: true,

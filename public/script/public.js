@@ -191,7 +191,7 @@ export function cookie(name) {
   return cookieValue;
 }
 export async function api(url, data, method = "POST", token) {
-  url = url ? `${api_host}/api/${url}` : "";
+  url = url ? `${api_host}/${url}` : "";
   data = data ? data : { host: location.host };
 
   method = (typeof method === "string" ? method : "POST").toUpperCase();

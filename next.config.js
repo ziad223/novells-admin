@@ -5,7 +5,7 @@ module.exports = {
     reactStrictMode: true,
     swcMinify: true,
     images: {
-        domains: ['via.placeholder.com'],
+        domains: ['via.placeholder.com', 'webtoon.future-developers.cloud'],
     },
 
 };

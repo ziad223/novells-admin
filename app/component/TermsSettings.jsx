@@ -1,39 +1,59 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { alert_msg, get_session } from "@/public/script/public";
+import { alert_msg , api_host } from "@/public/script/public";
 
 const TermsSettings = () => {
-    const [message1, setMessage1] = useState("");
-    const [message2, setMessage2] = useState("");
+    const [privacy, setPrivacy] = useState("");
+    const [terms, setTerms] = useState("");
     const [loading, setLoading] = useState(false);
 
+    // Fetch data from API
+    useEffect(() => {
+        const fetchSettings = async () => {
+            setLoading(true);
+            try {
+                 const response = await axios.get(`${api_host}/settings/all`);
+                if (response.data.status === "success") {
+                    const data = response.data.data;
+                    setPrivacy(data.privacy || "");
+                    setTerms(data.terms || "");
+                } else {
+                    alert("Failed to fetch settings data.");
+                }
+            } catch (error) {
+                console.error("Error fetching settings:", error);
+                alert("An error occurred while fetching settings.");
+            }
+            setLoading(false);
+        };
+
+        fetchSettings();
+    }, []);
+
     const handleSubmit = async (e) => {
-        e.preventDefault(); // منع التحديث الافتراضي للصفحة
+        e.preventDefault();
         setLoading(true);
 
         try {
             const token = get_session('user').access_token; // استبدل بـ التوكين الخاص بك
             const response = await axios.post(
                 `${api_host}/admin/settings/update`,
-                { message1, message2 },
+                { privacy, terms },
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`, // تضمين التوكين في الترويسة
+                        Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
                     },
                 }
             );
 
             if (response.data.status) {
-                setMessage1("");
-                setMessage2("");
                 alert_msg('System has been updated successfully');
-
             } else {
                 alert("Error updating settings. Please try again.");
             }
         } catch (error) {
-            console.error("Error:", error);
+            console.error("Error updating settings:", error);
             alert("An error occurred while updating settings.");
         }
 
@@ -43,41 +63,45 @@ const TermsSettings = () => {
     return (
         <div className="max-w-md mx-auto p-4">
             <h1 className="text-xl font-bold mb-4">Terms Settings</h1>
-            <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                    <label className="block text-gray-100 mb-2" htmlFor="message1">
-                        Message 1
-                    </label>
-                    <input
-                        type="text"
-                        id="message1"
-                        className="w-full border rounded p-2 bg-black border-blue-900"
-                        value={message1}
-                        onChange={(e) => setMessage1(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-100 mb-2" htmlFor="message2">
-                        Message 2
-                    </label>
-                    <input
-                        type="text"
-                        id="message2"
-                        className="w-full border rounded p-2 bg-black border-blue-900"
-                        value={message2}
-                        onChange={(e) => setMessage2(e.target.value)}
-                        required
-                    />
-                </div>
-                <button
-                    type="submit"
-                    className="bg-blue-500 text-white rounded px-4 py-2"
-                    disabled={loading}
-                >
-                    {loading ? "Updating..." : "Update Settings"}
-                </button>
-            </form>
+            {loading ? (
+                <div>Loading...</div>
+            ) : (
+                <form onSubmit={handleSubmit}>
+                    <div className="mb-4">
+                        <label className="block text-gray-100 mb-2" htmlFor="privacy">
+                            Privacy Policy
+                        </label>
+                        <textarea
+                            id="privacy"
+                            className="w-full border rounded p-2 bg-black border-blue-900"
+                            value={privacy}
+                            onChange={(e) => setPrivacy(e.target.value)}
+                            rows="5"
+                            required
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-100 mb-2" htmlFor="terms">
+                            Terms and Conditions
+                        </label>
+                        <textarea
+                            id="terms"
+                            className="w-full border rounded p-2 bg-black border-blue-900"
+                            value={terms}
+                            onChange={(e) => setTerms(e.target.value)}
+                            rows="5"
+                            required
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        className="bg-blue-500 text-white rounded px-4 py-2"
+                        disabled={loading}
+                    >
+                        {loading ? "Updating..." : "Update Settings"}
+                    </button>
+                </form>
+            )}
         </div>
     );
 };
