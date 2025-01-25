@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux';
 import Loader from '@/app/component/loader';
 import AboutSettings from '../component/AboutSettings';
 import TermsSettings from '../component/TermsSettings';
+import Profit from '../component/Profilt'
+import { FaRegUser } from "react-icons/fa";
 
 export default function Settings () {
 
@@ -83,6 +85,12 @@ export default function Settings () {
                         <span>About</span>
                     </a>
                 </li>
+                <li className="inline-block">
+                    <a onClick={() => setTab(4)} className={`set-text pointer flex gap-2 p-4 border-b border-transparent hover:border-primary hover:text-primary ${tab === 4 && '!border-primary text-primary'}`}>
+                    <FaRegUser />
+                        <span>Profit</span>
+                    </a>
+                </li>
 
             </ul>
 
@@ -156,7 +164,14 @@ export default function Settings () {
                         
                         <AboutSettings/>
 
-                    </div> : ''
+                    </div>
+                     : tab === 4 ?
+                    <div className="relative switch">
+
+                        
+                        <Profit/>
+
+                    </div> : null
                 }
             </div>
 

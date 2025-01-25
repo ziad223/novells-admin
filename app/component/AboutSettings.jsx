@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { get_session, api_host } from "@/public/script/public";
+import { get_session, api_host , alert_msg } from "@/public/script/public";
 
 const AboutSettings = () => {
     const [settings, setSettings] = useState({
@@ -12,12 +12,20 @@ const AboutSettings = () => {
         our_mission_text1: "",
         our_mission_text2: "",
         make_money_link: "",
+        make_money_button: "",
         publish_story_title: "",
         publish_story_link: "",
+        publish_story_button: "", 
         contact_title: "",
-        contact_content: "",
         about_title: "",
-        about_content: "",
+        about_content_one: "",
+        about_content_two: "",
+        about_content_three: "",
+        about_content_four: "",
+        contact_content_one: "",
+        contact_content_two: "",
+        contact_content_three: "",
+        contact_content_four: "",
     });
 
     const [loading, setLoading] = useState(true);
@@ -43,14 +51,23 @@ const AboutSettings = () => {
                         our_mission_text1: data.our_mission_text1 || "",
                         our_mission_text2: data.our_mission_text2 || "",
                         make_money_link: data.make_money_link || "",
+                        make_money_button: data.make_money_button || "", // تحميل ديناميكي
                         publish_story_title: data.publish_story_title || "",
                         publish_story_link: data.publish_story_link || "",
+                        publish_story_button: data.publish_story_button || "", // تحميل ديناميكي
                         contact_title: data.contact_title || "",
-                        contact_content: data.contact_content || "",
                         about_title: data.about_title || "",
-                        about_content: data.about_content || "",
+                        about_content_one: data.about_content_one || "",
+                        about_content_two: data.about_content_two || "",
+                        about_content_three: data.about_content_three || "",
+                        about_content_four: data.about_content_four || "",
+                        contact_content_one: data.contact_content_one || "",
+                        contact_content_two: data.contact_content_two || "",
+                        contact_content_three: data.contact_content_three || "",
+                        contact_content_four: data.contact_content_four || "",
                     };
                     setSettings(filteredSettings);
+
                 }
             })
             .catch((error) => {
@@ -115,7 +132,8 @@ const AboutSettings = () => {
             })
             .then((response) => {
                 if (response.data.status === "success") {
-                    alert("Settings updated successfully!");
+               alert_msg('Settings updated successfully');
+
                 }
             })
             .catch((error) => {
